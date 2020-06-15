@@ -1,28 +1,45 @@
+
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div>
+    <header>
+        <nav class="navbar navbar-default navbar-expand-lg navbar-light">
+            <div class="navbar-header d-flex col">
+                <a class="navbar-brand" href="/"><router-link to="/">Brand</router-link><b></b></a>
+                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle navbar-toggler ml-auto">
+                    <span class="navbar-toggler-icon"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+            </div>
+            <div id="navbarCollapse" class="collapse navbar-collapse justify-content-start">
+                <ul class="nav navbar-nav">
+                    <li class="nav-item"><a href="#" class="nav-link"><router-link to="/find">Search</router-link></a></li>
+                    <li class="nav-item"><a href="#" class="nav-link">About</a></li>
+                </ul>
+            </div>
+            <Identity/>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
 
-<script>
-import HelloWorld from './components/HelloWorld.vue'
-
-export default {
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-}
+<script lang="ts">
+import { Component, Prop, Vue } from "vue-property-decorator";
+import Identity from './components/Identity.vue';
+import SearchResult from './components/SearchResult';
+  @Component({
+      components: {
+          Identity, SearchResult
+      }
+  })
+export default class App extends Vue {}
 </script>
-
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+    @import './assets/site.css';
 </style>
