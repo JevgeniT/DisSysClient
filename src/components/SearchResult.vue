@@ -19,7 +19,7 @@
                    <div class="one">
                     <v-list-item-content>
                        <v-list-item-title class="headline mb-0"><h4>{{d.propertyName}}</h4> </v-list-item-title>
-                       <v-list-item-subtitle> {{d.propertyLocation}}, {{d.address}} </v-list-item-subtitle>
+                       <v-list-item-subtitle> {{d.country}}, {{d.address}} </v-list-item-subtitle>
                    </v-list-item-content>
               </div>
                <v-card-actions>

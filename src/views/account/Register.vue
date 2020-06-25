@@ -1,8 +1,6 @@
 <template>
     <div class="row">
         <div class="col-md-6">
-<!--            <h4>Use a local account to log in.</h4>-->
-            <h2 v-if="loginWasOk === false">Bad login attempt</h2>
             <hr />
             <div class="form-group">
                 <label for="Input_Email">Email</label>
@@ -16,10 +14,6 @@
                 <label for="Input_lastName">First name</label>
                 <input v-model="registerDTO.lastname" class="form-control" type="text" id="Input_lastName" />
             </div>
-<!--            <div class="form-group">-->
-<!--                <label for="Input_role">First name</label>-->
-<!--                <input v-model="registerDTO.ishost" class="form-control" type="checkbox" id="Input_role" />-->
-<!--            </div>-->
             <div class="form-group">
                 <label for="Input_Password">Password</label>
                 <input

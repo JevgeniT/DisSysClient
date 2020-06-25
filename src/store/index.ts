@@ -1,8 +1,7 @@
 import Vue from 'vue'
-import Vuex, { Store } from 'vuex'
+import Vuex, { } from 'vuex'
 import { ILoginDTO, IRegisterDTO } from '@/types/ILoginDTO';
 import { AccountApi } from '@/services/AccountApi';
-
 
 Vue.use(Vuex)
 
