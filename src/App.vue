@@ -32,7 +32,7 @@
 <script lang="ts">
 import { Component, Prop, Vue } from "vue-property-decorator";
 import Identity from './components/Identity.vue';
-import SearchResult from './components/SearchResult';
+import SearchResult from './components/SearchResult.vue';
   @Component({
       components: {
           Identity, SearchResult

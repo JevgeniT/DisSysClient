@@ -133,32 +133,6 @@
                             <v-list-item three-line>
                                 <v-list-item-content>
                                     <v-row>
-                                        <v-col cols="12" sm="6" md="4">
-                                            <v-menu
-                                                    ref="menu"
-                                                    v-model="menu"
-                                                    :close-on-content-click="false"
-                                                    :return-value.sync="date"
-                                                    transition="scale-transition"
-                                                    offset-y
-                                                    min-width="290px"
-                                            >
-                                                <template v-slot:activator="{ on, attrs }" data-app>
-                                                    <v-text-field
-                                                            v-model="date"
-                                                            label="Picker in menu"
-                                                            readonly
-                                                            v-bind="attrs"
-                                                            v-on="on"
-                                                    ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="date" no-title scrollable>
-                                                    <v-spacer></v-spacer>
-                                                    <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
-                                                    <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
-                                                </v-date-picker>
-                                            </v-menu>
-                                        </v-col>
                                     </v-row>
                                 </v-list-item-content>
                             </v-list-item>
@@ -173,10 +147,78 @@
             <div class="col-md-1">
             </div>
         </div>
+        <v-container>
+            <v-row>
+                <v-col cols="12" sm="6" md="4">
+                    <v-menu
+                            v-model="menu1"
+                            :close-on-content-click="false"
+                            :nudge-right="40"
+                            transition="scale-transition"
+                            offset-y
+                            min-width="290px"
+                            max-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    v-model="search.from"
+                                    label="Check In"
+                                    v-on="on"
+                                    readonly
+                                    clearable
+                                    @click:clear="search.from = null"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker no-title scrollable
+                                v-model="search.from"
+                                @change="menu1 = false"
+                                :min="minCheckIn"
+                        >
+                        </v-date-picker>
+                    </v-menu>
+                </v-col>
+
+                <v-col cols="12" sm="6" md="4">
+                    <v-menu
+                            v-model="menu2"
+                            :close-on-content-click="false"
+                            transition="scale-transition"
+                            offset-y
+                            max-width="290px"
+                    >
+                        <template v-slot:activator="{ on }">
+                            <v-text-field
+                                    :value="search.to"
+                                    clearable
+                                    label="Check out"
+                                    v-on="on"
+                                    @click:clear="search.to = null"
+                            ></v-text-field>
+                        </template>
+                        <v-date-picker no-title scrollable
+                                v-model="search.to"
+                                @change="menu2 = false"
+                                :min="minCheckOut"
+                                :show-current="true"
+                        >
+                            <v-spacer></v-spacer>
+                        </v-date-picker>
+                    </v-menu>
+                </v-col>
+                <v-btn type="submit" v-on:click="getDates"> Submit</v-btn>
+            </v-row>
+            <v-alert :value="alert"
+                     color="pink"
+                     type="error"
+                     border="top"
+                     transition="slide-y-transition">
+                Please choose dates first
+            </v-alert>
+        </v-container>
         <v-simple-table>
             <template v-slot:default>
                 <thead>
-                <tr>
+                <tr v-if="!hideChoice">
                     <th class="text-left">Room Type</th>
                     <th class="text-left">Sleeps</th>
                     <th class="text-left">Price for x nights</th>
@@ -184,18 +226,31 @@
                     <th class="text-left">Select Rooms</th>
                     <th class="text-left">#</th>
                 </tr>
+                <tr v-else>
+                    <th class="text-left">Room Type</th>
+                    <th class="text-left">Sleeps</th>
+                    <th class="text-left">#</th>
+                </tr>
                 </thead>
                 <tbody>
                 <tr v-for="item in data.propertyRooms" v-bind:key="item.id">
-                    <td><a id="rname" class="-bold">{{ item.name }}</a>
-                        <v-list v-for="i in item.roomFacilities" v-bind:key="i.id">
-                            <a id="fname">{{i.name}}</a>
-                        </v-list>
-                    </td>
-                    <td>{{ item.capacity }}</td>
-                    <td>22$</td>
-                    <td>policy </td>
                     <td>
+                        <a id="rname" class="-bold">
+                        <p class="font-weight-bold">{{ item.name }}</p>
+                        </a>
+                        <v-spacer></v-spacer>
+                        <a v-for="i in item.roomFacilities" v-bind:key="i.id">
+                            <a id="fname"><i class="fas fa-check">{{i.name}}</i></a><v-spacer></v-spacer>
+                        </a>
+                    </td>
+                    <td>
+                        <a v-for="x in item.capacity" v-bind:key="x.id">
+                        <i class="fas fa-user"></i>
+                    </a>
+                    </td>
+<!--                    <td>{{ item.capacity }}<i class="fas fa-user"></i> </td>-->
+                    <td v-if="!hideChoice">empty</td>
+                    <td v-if="!hideChoice">
                         <div class="form-group">
                         <label for="sel1"></label>
                         <select class="form-control" id="sel1">
@@ -204,8 +259,9 @@
                             <option>3</option>
                             <option>4</option>
                         </select>
-                    </div>
+                        </div>
                     </td>
+                    <td v-else class="text-center"><v-btn color="primary" @click="alert = true">Show Prices</v-btn></td>
                 </tr>
                 </tbody>
             </template>
@@ -216,14 +272,43 @@
 export default {
     name: "App",
     data: () => ({
-        date: new Date().toISOString().substr(0, 10),
-        menu: false,
+        menu1: false,
         modal: false,
         menu2: false,
-        data: {}
+        alert: false,
+        data: {},
+        data2: {},
+        date: null,
+        search: {
+            from: null,
+            to: null,
+            propertyId: NaN
+        }
     }),
+    computed: {
+        hideChoice: function () {
+            return !this.data2.length;
+        },
+        minCheckIn() {
+            const dayIn = new Date(this.search.from);
+            const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate());
+            return endDate.toISOString().slice(0, 10)
+        },
+        minCheckOut() {
+            const dayOut = new Date(this.minCheckIn);
+            const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3);
+            console.log(dayOut)
+            console.log(endDate)
+            return endDate.toISOString().slice(0, 10)
+        }
+    },
     beforeMount() {
-        this.getProperty();// fix
+        this.getProperty(); // fix
+    },
+    mounted: function () {
+        if (alert) {
+            this.hideAlert();
+        }
     },
     methods: {
         async getProperty() {
@@ -231,10 +316,32 @@ export default {
             const token = localStorage.getItem('jwt')
             const res = await fetch('https://localhost:5001/api/v1.0/property/' + id, {
                 method: 'GET',
-                headers: { Authorization: 'Bearer ' + token }
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
             });
             const data = await res.json();
             this.data = data;
+        },
+        async getDates() {
+            const token = localStorage.getItem('jwt')
+            this.search.propertyId = this.$route.params.id;
+            const res = await fetch('https://localhost:5001/api/v1.0/availability/checkdates', {
+                method: 'POST',
+                headers: {
+                    Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'
+                },
+                mode: "cors",
+                cache: "default",
+                body: JSON.stringify(this.search)
+            });
+            const data = await res.json();
+            this.data2 = data;
+        },
+        hideAlert: function () {
+            window.setInterval(() => {
+                this.alert = false;
+            }, 3000)
         }
     }
 };
