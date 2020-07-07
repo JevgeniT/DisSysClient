@@ -52,35 +52,20 @@
                 <div class="row">
                     <div class="col-md-8">
                         <h3>
-                            h3. Lorem ipsum dolor sit amet.
+                            <div class="text-left">
+                                <v-chip
+                                        class="ma-2"
+                                        secondary
+                                >
+                                    {{data.type}}
+                                </v-chip>
+                                {{data.name}}
+                                <v-subheader>{{data.address}}, {{data.country}}</v-subheader>
+                            </div>
                         </h3>
                         <dl>
-                            <dt>
-                                Description lists
-                            </dt>
                             <dd>
-                                A description list is perfect for defining terms.
-                            </dd>
-                            <dt>
-                                Euismod
-                            </dt>
-                            <dd>
-                                Vestibulum id ligula porta felis euismod semper eget lacinia odio sem nec elit.
-                            </dd>
-                            <dd>
-                                Donec id elit non mi porta gravida at eget metus.
-                            </dd>
-                            <dt>
-                                Malesuada porta
-                            </dt>
-                            <dd>
-                                Etiam porta sem malesuada magna mollis euismod.
-                            </dd>
-                            <dt>
-                                Felis euismod semper eget lacinia
-                            </dt>
-                            <dd>
-                                Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.
+                               {{data.description}}
                             </dd>
                         </dl>
                         <h3>
@@ -125,31 +110,26 @@
                         </blockquote>
                     </div>
                     <div class="col-md-4">
-                        <v-card
-                                class="mx-auto"
-                                max-width="344"
-                                outlined
+                        <v-chip
+                                class="ma-2"
+                                color="primary"
                         >
-                            <v-list-item three-line>
-                                <v-list-item-content>
-                                    <v-row>
-                                    </v-row>
-                                </v-list-item-content>
-                            </v-list-item>
-                            <v-card-actions>
-                                <v-btn text>Button</v-btn>
-                                <v-btn text>Button</v-btn>
-                            </v-card-actions>
-                        </v-card>
+                            10
+                        </v-chip>
+                        <p v-for="i in 4" v-bind:key="i">
+                            {{reviews[0]}}
+                            <v-divider></v-divider>
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="col-md-1">
             </div>
         </div>
-        <v-container>
+        <v-container id="ctr">
+            <v-card max-width="100%"> <v-card-text>
             <v-row>
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="3">
                     <v-menu
                             v-model="menu1"
                             :close-on-content-click="false"
@@ -177,8 +157,7 @@
                         </v-date-picker>
                     </v-menu>
                 </v-col>
-
-                <v-col cols="12" sm="6" md="4">
+                <v-col cols="12" sm="6" md="3">
                     <v-menu
                             v-model="menu2"
                             :close-on-content-click="false"
@@ -205,8 +184,19 @@
                         </v-date-picker>
                     </v-menu>
                 </v-col>
-                <v-btn type="submit" v-on:click="getDates"> Submit</v-btn>
-            </v-row>
+                <v-col cols="12" sm="6" md="3">
+                    <v-text-field
+                            hide-details
+                            :min="1"
+                            single-line
+                            type="number"
+                            label="Guests"
+                    />
+                </v-col>
+                <v-col cols="12" sm="6" md="2">
+                    <v-btn type="submit" id="submit" v-on:click="getDates"> Submit</v-btn>
+                </v-col>
+            </v-row></v-card-text>
             <v-alert :value="alert"
                      color="pink"
                      type="error"
@@ -214,64 +204,78 @@
                      transition="slide-y-transition">
                 Please choose dates first
             </v-alert>
+            </v-card>
         </v-container>
-        <v-simple-table>
-            <template v-slot:default>
-                <thead>
-                <tr v-if="!hideChoice">
-                    <th class="text-left">Room Type</th>
-                    <th class="text-left">Sleeps</th>
-                    <th class="text-left">Price for x nights</th>
-                    <th class="text-left">Your Choices</th>
-                    <th class="text-left">Select Rooms</th>
-                    <th class="text-left">#</th>
-                </tr>
-                <tr v-else>
-                    <th class="text-left">Room Type</th>
-                    <th class="text-left">Sleeps</th>
-                    <th class="text-left">#</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for="item in data.propertyRooms" v-bind:key="item.id">
-                    <td>
-                        <a id="rname" class="-bold">
+        <div class="divTable unstyledTable">
+            <div class="divTableHeading">
+                <div class="divTableRow">
+                    <div class="divTableHead" style="width: 20%">Room type</div>
+                    <div class="divTableHead" style="width: 5%">Sleeps</div>
+                    <template v-if="!hideChoice">
+                        <div class="divTableHead" style="width: 10%">Todays's Price</div>
+                        <div class="divTableHead" style="width: 30%">Your Choises</div>
+                        <div class="divTableHead" >Select an room </div>
+                        <div class="divTableHead"></div>
+                    </template>
+                    <template v-else>
+                        <div style="width: 50%" class="divTableHead"></div>
+                        <div style="width: 25%" class="divTableHead"></div>
+                    </template>
+                </div>
+            </div>
+            <div class="divTableBody" v-for="item in data.propertyRooms" v-bind:key="item.id">
+                <div class="divTableRow">
+                    <div class="divTableCell">
+                         <input type="hidden" :set="reservation.roomId = item.id">
                         <p class="font-weight-bold">{{ item.name }}</p>
-                        </a>
-                        <v-spacer></v-spacer>
+                        <p>{{item.bedType}}</p>
                         <a v-for="i in item.roomFacilities" v-bind:key="i.id">
-                            <a id="fname"><i class="fas fa-check">{{i.name}}</i></a><v-spacer></v-spacer>
+                            <a class="fname"><i class="fas fa-check">{{i.name}}</i></a>
                         </a>
-                    </td>
-                    <td>
-                        <a v-for="x in item.capacity" v-bind:key="x.id">
-                        <i class="fas fa-user"></i>
-                    </a>
-                    </td>
-<!--                    <td>{{ item.capacity }}<i class="fas fa-user"></i> </td>-->
-                    <td v-if="!hideChoice">empty</td>
-                    <td v-if="!hideChoice">
-                        <div class="form-group">
-                        <label for="sel1"></label>
-                        <select class="form-control" id="sel1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
-                            <option>4</option>
-                        </select>
+                        <a class="fname"><i class="fas fa-check">{{item.size}} m²</i></a>
+                    </div>
+                    <div class="divTableCell">
+                        <a v-for="x in item.adultsCapacity" v-bind:key="x.id">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    </div>
+                    <template v-if="!hideChoice">
+                    <div class="divTableCell"></div>
+                    <div v-if="!hideChoice" class="divTableCell">
+                        <div class="divTableRow"  v-for="d in data2" v-bind:key="d.id" :set="reservation.policy = d.policy.name">
+                            {{d.policy.name}}
                         </div>
-                    </td>
-                    <td v-else class="text-center"><v-btn color="primary" @click="alert = true">Show Prices</v-btn></td>
-                </tr>
-                </tbody>
-            </template>
-        </v-simple-table>
+                    </div>
+                    <div v-if="!hideChoice" class="divTableCell">
+                        <div v-for="d in data2" class="input-group" v-bind:key="d.name">
+                            <label>
+                                <select class="custom-select" v-model="reservation.quantity">
+                                    <option selected>Choose...</option>
+                                    <option v-for="x in d.roomsAvailable" v-bind:key="x.id">{{x}}</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+                    <div v-if="!hideChoice" class="divTableCell"><button class="btn btn-primary" type="submit" v-on:click="submitReservation">Reserve</button> </div>
+                    </template>
+                    <template v-else>
+                        <div style="width: 50%" class="divTableCell"></div>
+                        <div style="width: 25%" class="divTableCell"><button class="btn btn-primary">Prices</button></div>
+                    </template>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
 export default {
     name: "App",
     data: () => ({
+        reservation: {
+            roomId: null,
+            quantity: null,
+            policy: null
+        },
         menu1: false,
         modal: false,
         menu2: false,
@@ -283,7 +287,12 @@ export default {
             from: null,
             to: null,
             propertyId: NaN
-        }
+        },
+        days: null,
+        reviews: ['“Considering overall price level in X hotels during summer season, ' +
+        'a 48m2 suite with sauna and two seaside balconies is a very good value for money.' +
+        ' Free parking. Saunas and pool included. Good sporting facilities.' +
+        ' Clean, modern, friendly service. Two rooftop cafes.”']
     }),
     computed: {
         hideChoice: function () {
@@ -297,8 +306,6 @@ export default {
         minCheckOut() {
             const dayOut = new Date(this.minCheckIn);
             const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3);
-            console.log(dayOut)
-            console.log(endDate)
             return endDate.toISOString().slice(0, 10)
         }
     },
@@ -322,8 +329,10 @@ export default {
             });
             const data = await res.json();
             this.data = data;
+            console.log(data)
         },
         async getDates() {
+            this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
             const token = localStorage.getItem('jwt')
             this.search.propertyId = this.$route.params.id;
             const res = await fetch('https://localhost:5001/api/v1.0/availability/checkdates', {
@@ -342,15 +351,55 @@ export default {
             window.setInterval(() => {
                 this.alert = false;
             }, 3000)
+        },
+        async submitReservation() {
+            console.log(this.reservation.quantity)
+            console.log(this.reservation.roomId)
+            console.log(this.reservation.policy)
         }
     }
 };
 </script>
 
 <style scoped>
-    #fname{
-        font-size: .85em;
+    .fname{
+        font-size: .75rem;
+        color: #008009;
     }
-    #rname{
+    #ctr{
+        /*padding-bottom: 2px;*/
+        margin-bottom: 10px;
+        width: 100%;
+        padding-right: 2px;
+        padding-left: 2px;
     }
+    #submit{
+        margin-top: 10px;
+    }
+    div.unstyledTable {
+        width: 100%;
+        height: 200px;
+        text-align: center;
+        border-collapse: collapse;
+    }
+    .divTable.unstyledTable .divTableCell, .divTable.unstyledTable .divTableHead {
+        border: 1px solid #AAAAAA;
+        padding: 10px 2px;
+    }
+    .divTable.unstyledTable .divTableHeading {
+        background: #DDDDDD;
+    }
+    .divTable.unstyledTable .divTableHeading .divTableHead {
+        font-weight: normal;
+    }
+    .unstyledTable .tableFootStyle {
+        font-weight: bold;
+    }
+    /* DivTable.com */
+    .divTable{ display: table; }
+    .divTableRow { display: table-row; }
+    .divTableHeading { display: table-header-group;}
+    .divTableCell, .divTableHead { display: table-cell;}
+    .divTableHeading { display: table-header-group;}
+    .divTableBody { display: table-row-group;}
 </style>

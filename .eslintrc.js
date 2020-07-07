@@ -22,6 +22,7 @@ module.exports = {
         '@typescript-eslint/interface-name-prefix': [
             "error",
             { "prefixWithI": "always"}
-        ]
+        ],
+        'vue/no-parsing-error': [2, { 'x-invalid-end-tag': false }]
     }
 }

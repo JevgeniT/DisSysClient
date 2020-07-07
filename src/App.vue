@@ -23,7 +23,9 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-        <router-view />
+            <v-app>
+                <router-view />
+            </v-app>
       </main>
     </div>
   </div>
