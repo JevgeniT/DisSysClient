@@ -116,8 +116,8 @@
                         >
                             10
                         </v-chip>
-                        <p v-for="i in 4" v-bind:key="i">
-                            {{reviews[0]}}
+                        <p v-for="i in reviews" v-bind:key="i.id">
+                            {{i.comment}}
                             <v-divider></v-divider>
                         </p>
                     </div>
@@ -228,6 +228,15 @@
                     <div class="divTableCell">
                          <input type="hidden" :set="reservation.roomId = item.id">
                         <p class="font-weight-bold">{{ item.name }}</p>
+<!--                        <v-btn-->
+<!--                                color="primary"-->
+<!--                                dark-->
+<!--                                @click.stop="dialog = true"-->
+<!--                        >-->
+<!--                            Open Dialog-->
+<!--                        </v-btn>-->
+                        <property-room>
+                        </property-room>
                         <p>{{item.bedType}}</p>
                         <a v-for="i in item.roomFacilities" v-bind:key="i.id">
                             <a class="fname"><i class="fas fa-check">{{i.name}}</i></a>
@@ -268,8 +277,13 @@
     </div>
 </template>
 <script>
+import PropertyRoom from "@/components/RoomDetails";
+
 export default {
     name: "App",
+    components: {
+        PropertyRoom
+    },
     data: () => ({
         reservation: {
             roomId: null,
@@ -289,10 +303,8 @@ export default {
             propertyId: NaN
         },
         days: null,
-        reviews: ['“Considering overall price level in X hotels during summer season, ' +
-        'a 48m2 suite with sauna and two seaside balconies is a very good value for money.' +
-        ' Free parking. Saunas and pool included. Good sporting facilities.' +
-        ' Clean, modern, friendly service. Two rooftop cafes.”']
+        reviews: null,
+        dialog: false
     }),
     computed: {
         hideChoice: function () {
@@ -311,6 +323,7 @@ export default {
     },
     beforeMount() {
         this.getProperty(); // fix
+        this.GetReviews();
     },
     mounted: function () {
         if (alert) {
@@ -329,7 +342,6 @@ export default {
             });
             const data = await res.json();
             this.data = data;
-            console.log(data)
         },
         async getDates() {
             this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
@@ -344,8 +356,18 @@ export default {
                 cache: "default",
                 body: JSON.stringify(this.search)
             });
-            const data = await res.json();
-            this.data2 = data;
+            this.data2 = await res.json();
+        },
+        async GetReviews() {
+            const id = this.$route.params.id;
+            const token = localStorage.getItem('jwt')
+            const res = await fetch('https://localhost:5001/api/v1.0/review/property/' + id, {
+                method: 'GET',
+                headers: {
+                    Authorization: 'Bearer ' + token
+                }
+            });
+            this.reviews = await res.json();
         },
         hideAlert: function () {
             window.setInterval(() => {

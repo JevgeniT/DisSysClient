@@ -5,6 +5,7 @@ import AccountLogin from '../views/account/Login.vue'
 import AccountRegister from '../views/account/Register.vue'
 import SearchResult from "@/components/SearchResult.vue"
 import PropertyPage from "@/components/PropertyPage.vue";
+import PropertyRoom from "@/components/RoomDetails.vue";
 
 Vue.use(VueRouter)
 

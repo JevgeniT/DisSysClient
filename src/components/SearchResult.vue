@@ -10,20 +10,34 @@
             <v-btn class="ma2" type="submit">Search</v-btn>
         </form>
         </div>
-      <div class="carditem">
+      <div>
            <v-card v-for="d in data"  v-bind:key="d.id" class="mx-auto" outlined>
                <v-list-item three-line>
                <v-list-item-avatar tile size="150" color="grey">
                    <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"></v-img>
                </v-list-item-avatar>
-                   <div class="one">
+                   <v-row dense class="one">
                     <v-list-item-content>
-                       <v-list-item-title class="headline mb-0"><h4>{{d.propertyName}}</h4> </v-list-item-title>
+                       <v-list-item-title class="headline mb-2">
+                           <v-row>
+                               <v-chip color="green" outlined small>{{d.type}}</v-chip><h4>{{d.name}}</h4>
+                           </v-row>
+                       </v-list-item-title>
                        <v-list-item-subtitle> {{d.country}}, {{d.address}} </v-list-item-subtitle>
                    </v-list-item-content>
-              </div>
+                      <v-col justify="end">
+                          <v-row justify="end" align="center">
+                              Random Text <v-chip outlined color="teal lighten-3">{{d.score}}</v-chip>
+                          </v-row>
+                          <v-row justify="end" align="center">
+                              {{d.reviews}} reviews
+                          </v-row>
+                          <v-row justify="end">
+                              <v-btn text id="checkbutton" color="primary"><router-link :to="{name:'propertyInfo', params:{id: d.id}}">Select room </router-link></v-btn>
+                          </v-row>
+                      </v-col>
+                   </v-row>
                <v-card-actions>
-                   <v-btn text id="checkbutton"><router-link :to="{name:'propertyInfo', params:{id: d.id}}" >Select room </router-link></v-btn>
                </v-card-actions>
                </v-list-item>
            </v-card>
@@ -74,7 +88,7 @@ export default {
 </script>
 <style>
     .one{
-        padding: 25px;
+        padding: 30px;
         margin-bottom: 56px;
     }
     #checkbutton{
