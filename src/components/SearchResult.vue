@@ -45,7 +45,7 @@
     </div>
 </template>
 <script>
-export default {
+export default { // todo fix fonts
     name: "app",
     data() {
         return {

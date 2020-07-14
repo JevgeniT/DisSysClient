@@ -227,15 +227,7 @@
                 <div class="divTableRow">
                     <div class="divTableCell">
                          <input type="hidden" :set="reservation.roomId = item.id">
-                        <p class="font-weight-bold">{{ item.name }}</p>
-<!--                        <v-btn-->
-<!--                                color="primary"-->
-<!--                                dark-->
-<!--                                @click.stop="dialog = true"-->
-<!--                        >-->
-<!--                            Open Dialog-->
-<!--                        </v-btn>-->
-                        <property-room>
+                        <property-room v-bind:r-id="item.id" :r-name="item.name">
                         </property-room>
                         <p>{{item.bedType}}</p>
                         <a v-for="i in item.roomFacilities" v-bind:key="i.id">
