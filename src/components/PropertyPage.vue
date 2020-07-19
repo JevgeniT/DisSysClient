@@ -60,12 +60,13 @@
                                     {{data.type}}
                                 </v-chip>
                                 {{data.name}}
-                                <v-subheader>{{data.address}}, {{data.country}}</v-subheader>
+                                <v-subheader> <i class="fas fa-map-marker-alt"></i>
+                                    {{data.address}}, {{data.country}}</v-subheader>
                             </div>
                         </h3>
                         <dl>
                             <dd>
-                               {{data.description}}
+                              #description {{data.description}}
                             </dd>
                         </dl>
                         <h3>

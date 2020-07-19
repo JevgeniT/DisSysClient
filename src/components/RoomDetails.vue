@@ -9,15 +9,17 @@
 
         <v-dialog
                 v-model="dialog"
-                max-width="800px"
+                max-width="1000px"
         >
             <v-card
                     elevation="24"
                     max-width="100%"
                     class="mx-auto">
                 <v-card-title class="headline">{{room.name}}</v-card-title>
-                <div class="row">
-                    <div class="col-md-6" style="margin: 10px">
+                <v-card-text>
+                    <div class="col-md-12">
+                    <div class="row">
+                    <div class="col-md-6">
                         <v-carousel
                                 :continuous="false"
                                 :show-arrows="false"
@@ -44,14 +46,16 @@
                         </v-carousel>
                     </div>
                     <div class="col-md-6">
-                        <v-card-text>
-                        <p v-for="f in room.roomFacilities" v-bind:key="f.id">
-                            <i class="fas fa-check"></i>{{f.name}}
-                        </p>
-                        </v-card-text>
-
+                        <span style="font-weight: bold">Room Size: </span> {{room.size}} m²
+                        <br>
+                        <span style="font-weight: bold">Room Facilities: </span>
+                          <p v-for="f in room.roomFacilities" v-bind:key="f.id">
+                              <i class="fas fa-check"></i>{{f.name}}
+                          </p>
                     </div>
                 </div>
+                    </div>
+                </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
                     <v-btn

@@ -42,7 +42,7 @@ export abstract class AccountApi {
         try {
             if (response.status === 200) {
                 localStorage.setItem('jwt', response.data.token)
-                return null;
+                return response.data.token;
             }
             return null;
         } catch (error) {
