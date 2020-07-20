@@ -89,7 +89,7 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-checkbox v-model="selected" value="Hotel" class="mx-2" label="Hotel"></v-checkbox>
-                        <v-checkbox v-model="selected" value="Appartments" class="mx-2" label="Appartments"></v-checkbox>
+                        <v-checkbox v-model="selected" value="Apartments" class="mx-2" label="Apartments"></v-checkbox>
                         <v-checkbox v-model="selected" :value="data.score" class="mx-2" label="6+"></v-checkbox>
                         <v-checkbox v-model="selected" value="7" class="mx-2" label="7+"></v-checkbox>
                     </v-card-text>
@@ -102,7 +102,7 @@
                    <p>Sorry, nothing has been found</p>
                </v-list-item-content>
            </v-card>
-           <v-card v-for="d in data"  v-bind:key="d.id" class="mx-auto" outlined style="margin-bottom: 5px">
+           <v-card v-for="d in filtered"  v-bind:key="d.id" class="mx-auto" outlined style="margin-bottom: 5px">
                <v-list-item three-line>
                <v-list-item-avatar tile size="150" color="grey">
                    <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"></v-img>
@@ -157,20 +157,21 @@ export default { // todo fix fonts
         };
     },
     computed: {
-        filter() {
-            return this.data.filter(p => this.selected.every(sel => p[sel] === true));
+        filtered: function() {
+            if (!this.selected.length) {
+                return this.data;
+            }
+            return this.data.filter(p => this.selected.includes(p.type || p.score));
         },
         minCheckIn() {
-            if (this.request.from == null) {
-                return new Date();
-            }
-            const dayIn = new Date(this.request.from);
-            const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate());
+            const dayIn = new Date(Date.now());
+            console.log(dayIn)
+            const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate() + 1);
             return endDate.toISOString().slice(0, 10)
         },
         minCheckOut() {
             const dayOut = new Date(this.minCheckIn);
-            const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3);
+            const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 2);
             return endDate.toISOString().slice(0, 10)
         }
     },
@@ -179,6 +180,8 @@ export default { // todo fix fonts
     },
     methods: {
         async searchRequest() {
+            console.log(this.request.from)
+            console.log(this.request.to)
             const request = new Request(
                 "https://localhost:5001/api/v1.0/property/find",
                 {

@@ -410,7 +410,6 @@ export default {
     .unstyledTable .tableFootStyle {
         font-weight: bold;
     }
-    /* DivTable.com */
     .divTable{ display: table; }
     .divTableRow { display: table-row; }
     .divTableHeading { display: table-header-group;}
