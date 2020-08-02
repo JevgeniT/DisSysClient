@@ -73,45 +73,45 @@
 
 <script>
 export default { // todo fix modal errors
-    name: "RoomDetails",
-    data: () => ({
-        room: '',
-        dialog: false,
-        colors: [
-            'indigo',
-            'warning',
-            'pink darken-2',
-            'red lighten-1',
-            'deep-purple accent-4'
-        ],
-        slides: [
-            'First',
-            'Second',
-            'Third',
-            'Fourth',
-            'Fifth'
-        ]
-    }),
-    props: {
-        rId: String,
-        rName: String
+  name: 'RoomDetails',
+  data: () => ({
+    room: '',
+    dialog: false,
+    colors: [
+      'indigo',
+      'warning',
+      'pink darken-2',
+      'red lighten-1',
+      'deep-purple accent-4'
+    ],
+    slides: [
+      'First',
+      'Second',
+      'Third',
+      'Fourth',
+      'Fifth'
+    ]
+  }),
+  props: {
+    rId: String,
+    rName: String
+  },
+  methods: {
+    openModal () {
+      this.room = this.GetRoom()
+      this.dialog = true
     },
-    methods: {
-        openModal() {
-            this.room = this.GetRoom();
-            this.dialog = true;
-        },
-        async GetRoom() {
-            const token = localStorage.getItem('jwt')
-            const res = await fetch('https://localhost:5001/api/v1.0/room/' + this.rId, {
-                method: 'GET',
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
-            this.room = await res.json();
+    async GetRoom () {
+      const token = localStorage.getItem('jwt')
+      const res = await fetch('https://localhost:5001/api/v1.0/room/' + this.rId, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token
         }
+      })
+      this.room = await res.json()
     }
+  }
 }
 </script>
 

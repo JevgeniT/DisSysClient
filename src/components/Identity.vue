@@ -1,44 +1,38 @@
 <template>
-    <ul class="navbar-nav">
-        <template v-if="isAuthenticated">
-            <li class="nav-item">
-                <span class="nav-link text-dark">{{userEmail}}</span>
-            </li>
-            <li class="nav-item">
-                <a @click="logoutOnClick" class="nav-link text-dark" href>Logout</a>
-            </li>
-        </template>
-        <li v-else class="nav-item">
-             <v-btn text large color="primary" outlined ><router-link to="/account/login">Login</router-link></v-btn>
-        </li>
-        <li  class="nav-item">
-            <v-btn text large color="primary" outlined ><router-link to="/account/register">Signup</router-link></v-btn>
-        </li>
-    </ul>
+  <div v-if="isAuthenticated">
+    <v-btn text>{{userEmail}}</v-btn>
+    <v-btn><router-link to="/propertyOwner">Details</router-link></v-btn>
+    <v-btn @click="logoutOnClick">Logout</v-btn>
+  </div>
+  <div v-else>
+         <v-btn class="ma-2" text  color="primary"  ><router-link to="/account/login">Login</router-link></v-btn>
+         <v-btn class="ma-2" text  color="primary" ><router-link to="/account/register">Signup</router-link></v-btn>
+  </div>
 </template>
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import store from "../store";
-import router from "../router";
-import JwtDecode from 'jwt-decode';
+<script>
+import store from '../store/index'
+import router from '../router'
+import JwtDecode from 'jwt-decode'
 
-@Component
-export default class Identity extends Vue {
-    get isAuthenticated(): boolean {
-        return store.getters.isAuthenticated;
+export default {
+  name: 'Identity',
+  methods: {
+    logoutOnClick () {
+      store.dispatch('clearJwt')
+      router.push('/').catch(e => {})
     }
-
-    get userEmail(): string {
-        if (store.state.jwt) {
-            const decoded = JwtDecode(store.state.jwt) as Record<string, string>;
-            return decoded["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"];
-        }
-        return 'null';
+  },
+  computed: {
+    userEmail () {
+      if (store.state.jwt) {
+        const decoded = JwtDecode(store.state.jwt)
+        return decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
+      }
+      return 'null'
+    },
+    isAuthenticated () {
+      return store.getters.isAuthenticated
     }
-
-    logoutOnClick(): void {
-        store.dispatch("clearJwt");
-        router.push("/");
-    }
+  }
 }
 </script>

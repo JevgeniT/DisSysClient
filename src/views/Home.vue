@@ -6,18 +6,6 @@
 </template>
 <script>
 export default {
-    name: "appp",
-    data: () => ({
-        showPicker: false,
-        selectedDate: null,
-        date: null
-    }),
-    methods: {
-        closeDateMenu () {
-            this.showPicker = false;
-            this.selectedDate = this.date ? (this.date) : '';
-            console.log(this.selectedDate)
-        }
-    }
+  name: 'Home'
 }
 </script>

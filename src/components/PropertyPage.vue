@@ -270,110 +270,110 @@
     </div>
 </template>
 <script>
-import PropertyRoom from "@/components/RoomDetails";
+import PropertyRoom from '@/components/RoomDetails'
 
 export default {
-    name: "App",
-    components: {
-        PropertyRoom
+  name: 'App',
+  components: {
+    PropertyRoom
+  },
+  data: () => ({
+    reservation: {
+      roomId: null,
+      quantity: null,
+      policy: null
     },
-    data: () => ({
-        reservation: {
-            roomId: null,
-            quantity: null,
-            policy: null
-        },
-        menu1: false,
-        modal: false,
-        menu2: false,
-        alert: false,
-        data: {},
-        data2: {},
-        date: null,
-        search: {
-            from: null,
-            to: null,
-            propertyId: NaN
-        },
-        days: null,
-        reviews: null,
-        dialog: false
-    }),
-    computed: {
-        hideChoice: function () {
-            return !this.data2.length;
-        },
-        minCheckIn() {
-            const dayIn = new Date(this.search.from);
-            const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate());
-            return endDate.toISOString().slice(0, 10)
-        },
-        minCheckOut() {
-            const dayOut = new Date(this.minCheckIn);
-            const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3);
-            return endDate.toISOString().slice(0, 10)
-        }
+    menu1: false,
+    modal: false,
+    menu2: false,
+    alert: false,
+    data: {},
+    data2: {},
+    date: null,
+    search: {
+      from: null,
+      to: null,
+      propertyId: NaN
     },
-    beforeMount() {
-        this.getProperty(); // fix
-        this.GetReviews();
+    days: null,
+    reviews: null,
+    dialog: false
+  }),
+  computed: {
+    hideChoice: function () {
+      return !this.data2.length
     },
-    mounted: function () {
-        if (alert) {
-            this.hideAlert();
-        }
+    minCheckIn () {
+      const dayIn = new Date(this.search.from)
+      const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate())
+      return endDate.toISOString().slice(0, 10)
     },
-    methods: {
-        async getProperty() {
-            const id = this.$route.params.id;
-            const token = localStorage.getItem('jwt')
-            const res = await fetch('https://localhost:5001/api/v1.0/property/' + id, {
-                method: 'GET',
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
-            const data = await res.json();
-            this.data = data;
-        },
-        async getDates() {
-            this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
-            const token = localStorage.getItem('jwt')
-            this.search.propertyId = this.$route.params.id;
-            const res = await fetch('https://localhost:5001/api/v1.0/availability/checkdates', {
-                method: 'POST',
-                headers: {
-                    Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'
-                },
-                mode: "cors",
-                cache: "default",
-                body: JSON.stringify(this.search)
-            });
-            this.data2 = await res.json();
-        },
-        async GetReviews() {
-            const id = this.$route.params.id;
-            const token = localStorage.getItem('jwt')
-            const res = await fetch('https://localhost:5001/api/v1.0/review/property/' + id, {
-                method: 'GET',
-                headers: {
-                    Authorization: 'Bearer ' + token
-                }
-            });
-            this.reviews = await res.json();
-        },
-        hideAlert: function () {
-            window.setInterval(() => {
-                this.alert = false;
-            }, 3000)
-        },
-        async submitReservation() {
-            console.log(this.reservation.quantity)
-            console.log(this.reservation.roomId)
-            console.log(this.reservation.policy)
-        }
+    minCheckOut () {
+      const dayOut = new Date(this.minCheckIn)
+      const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3)
+      return endDate.toISOString().slice(0, 10)
     }
-};
+  },
+  beforeMount () {
+    this.getProperty() // fix
+    this.GetReviews()
+  },
+  mounted: function () {
+    if (alert) {
+      this.hideAlert()
+    }
+  },
+  methods: {
+    async getProperty () {
+      const id = this.$route.params.id
+      const token = localStorage.getItem('jwt')
+      const res = await fetch('https://localhost:5001/api/v1.0/property/' + id, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      const data = await res.json()
+      this.data = data
+    },
+    async getDates () {
+      this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
+      const token = localStorage.getItem('jwt')
+      this.search.propertyId = this.$route.params.id
+      const res = await fetch('https://localhost:5001/api/v1.0/availability/checkdates', {
+        method: 'POST',
+        headers: {
+          Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'
+        },
+        mode: 'cors',
+        cache: 'default',
+        body: JSON.stringify(this.search)
+      })
+      this.data2 = await res.json()
+    },
+    async GetReviews () {
+      const id = this.$route.params.id
+      const token = localStorage.getItem('jwt')
+      const res = await fetch('https://localhost:5001/api/v1.0/review/property/' + id, {
+        method: 'GET',
+        headers: {
+          Authorization: 'Bearer ' + token
+        }
+      })
+      this.reviews = await res.json()
+    },
+    hideAlert: function () {
+      window.setInterval(() => {
+        this.alert = false
+      }, 3000)
+    },
+    async submitReservation () {
+      console.log(this.reservation.quantity)
+      console.log(this.reservation.roomId)
+      console.log(this.reservation.policy)
+    }
+  }
+}
 </script>
 
 <style scoped>

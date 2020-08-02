@@ -2,59 +2,60 @@
     <div class="row">
         <div class="col-md-6">
             <h4>Use a local account to log in.</h4>
-            <h2 v-if="loginWasOk === false">Bad login attempt</h2>
+            <v-alert type="error" v-if="loginWasOk === false">Bad login attempt</v-alert>
             <hr />
             <div class="form-group">
                 <label for="Input_Email">Email</label>
-                <input v-model="loginInfo.email" class="form-control" type="email" id="Input_Email" />
+                <input v-model="user.email" class="form-control" type="email" id="Input_Email" />
             </div>
             <div class="form-group">
                 <label for="Input_Password">Password</label>
                 <input
-                        v-model="loginInfo.password"
+                        v-model="user.password"
                         class="form-control"
                         type="password"
                         id="Input_Password"
                 />
             </div>
             <div class="form-group">
-                <button @click="loginOnClick($event)" class="btn btn-primary">Log in</button>
+                <button @click="loginOnClick()" class="btn btn-primary">Log in</button>
             </div>
         </div>
     </div>
  </template>
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import { ILoginDTO } from "@/types/ILoginDTO";
-import store from "../../store";
-import router from "../../router";
+<script >
+import store from '../../store/index'
+import router from '../../router/index'
+import { User } from '@/types/User'
 
-@Component
-export default class Index extends Vue {
-        private loginInfo: ILoginDTO = {
-            email: "host@host.com",
-            password: "qweqwe"
-        };
-
-        private loginWasOk: boolean | null = null;
-
-        loginOnClick(): void {
-            if (
-                this.loginInfo.email.length > 0 &&
-                this.loginInfo.password.length > 0
-            ) {
-                store
-                    .dispatch("authenticateUser", this.loginInfo)
-                    .then((isLoggedIn: boolean) => {
-                        if (isLoggedIn) {
-                            this.loginWasOk = true
-                            router.push("/");
-                        } else {
-                            this.loginWasOk = false;
-                        }
-                    });
+export default {
+  name: 'Login',
+  data () {
+    return {
+      user: new User('host@host.com', 'qweqwe'), // placeholder
+      loading: false,
+      loginWasOk: null
+    }
+  },
+  methods: {
+    loginOnClick () {
+      if (
+        this.user.email.length > 0 &&
+         this.user.password.length > 0
+      ) {
+        store
+          .dispatch('authenticateUser', this.user)
+          .then((isLoggedIn) => {
+            if (isLoggedIn) {
+              this.loginWasOk = true
+              router.push('/')
             }
-        }
+          }, () => {
+            this.loginWasOk = false
+          })
+      }
+    }
+  }
 }
 </script>

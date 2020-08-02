@@ -30,18 +30,27 @@
     </div>
   </div>
 </template>
+<script>
+import Identity from './components/Identity.vue'
 
-<script lang="ts">
-import { Component, Prop, Vue } from "vue-property-decorator";
-import Identity from './components/Identity.vue';
-import SearchResult from './components/SearchResult.vue';
-  @Component({
-      components: {
-          Identity, SearchResult
-      }
-  })
-export default class App extends Vue {}
+export default {
+  name: 'app',
+  components: {
+    Identity
+  }
+}
 </script>
+<!--<script lang="ts">-->
+<!--import { Component, Prop, Vue } from "vue-property-decorator";-->
+<!--import Identity from './components/Identity.vue';-->
+<!--import SearchResult from './components/SearchResult.vue';-->
+<!--  @Component({-->
+<!--      components: {-->
+<!--          Identity, SearchResult-->
+<!--      }-->
+<!--  })-->
+<!--export default class App extends Vue {}-->
+<!--</script>-->
 <style>
     @import './assets/site.css';
 </style>

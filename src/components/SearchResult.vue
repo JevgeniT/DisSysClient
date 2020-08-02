@@ -139,78 +139,65 @@
 </template>
 <script>
 export default { // todo fix fonts
-    name: "app",
-    data() {
-        return {
-            request: {
-            },
-            data: {},
-            menu1: false,
-            menu2: false,
-            score: '',
-            select: [1, 2, 3],
-            items: [],
-            selected: [],
-            rules: {
-                required: v => !!v || 'Required'
-            }
-        };
-    },
-    computed: {
-        filtered: function() {
-            if (!this.selected.length) {
-                return this.data;
-            }
-            return this.data.filter(p => this.selected.includes(p.type || p.score));
-        },
-        minCheckIn() {
-            const dayIn = new Date(Date.now());
-            console.log(dayIn)
-            const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate() + 1);
-            return endDate.toISOString().slice(0, 10)
-        },
-        minCheckOut() {
-            const dayOut = new Date(this.minCheckIn);
-            const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 2);
-            return endDate.toISOString().slice(0, 10)
-        }
-    },
-    beforeMount() {
-        // this.getUserLocation();
-    },
-    methods: {
-        async searchRequest() {
-            console.log(this.request.from)
-            console.log(this.request.to)
-            const request = new Request(
-                "https://localhost:5001/api/v1.0/property/find",
-                {
-                    method: "POST",
-                    headers: { 'Content-Type': 'application/json' },
-                    mode: "cors",
-                    cache: "default",
-                    body: JSON.stringify(this.request)
-                }
-            );
-            const res = await fetch(request);
-            this.data = await res.json();
-        },
-        async getUserLocation() { //    todo offer place in current location
-            const request = new Request(
-                "http://ip-api.com/json",
-                {
-                    method: "GET"
-                }
-            );
-            const response = await fetch(request);
-            const location = await response.json();
-        },
-        getScore(value) {
-            const scoreMap = new Map([[6, "Pleasant"], [7, "Good"], [8, "Very good"], [9, "Wonderful"]]);
-            return scoreMap.get(Math.round(value));
-        }
+  name: 'SearchResult',
+  data () {
+    return {
+      request: {
+      },
+      data: {},
+      menu1: false,
+      menu2: false,
+      score: '',
+      select: [1, 2, 3],
+      items: [],
+      selected: [],
+      rules: {
+        required: v => !!v || 'Required'
+      }
     }
-};
+  },
+  computed: {
+    filtered: function () {
+      if (!this.selected.length) {
+        return this.data
+      }
+      return this.data.filter(p => this.selected.includes(p.type || p.score))
+    },
+    minCheckIn () {
+      const dayIn = new Date(Date.now())
+      const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate() + 1)
+      return endDate.toISOString().slice(0, 10)
+    },
+    minCheckOut () {
+      const dayOut = new Date(this.minCheckIn)
+      const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 2)
+      return endDate.toISOString().slice(0, 10)
+    }
+  },
+  beforeMount () {
+    // this.getUserLocation();
+  },
+  methods: {
+    async searchRequest () {
+      const request = new Request(
+        'https://localhost:5001/api/v1.0/property/find',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          mode: 'cors',
+          cache: 'default',
+          body: JSON.stringify(this.request)
+        }
+      )
+      const res = await fetch(request)
+      this.data = await res.json()
+    },
+    getScore (value) {
+      const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])
+      return scoreMap.get(Math.round(value))
+    }
+  }
+}
 </script>
 <style>
     .card-row{
