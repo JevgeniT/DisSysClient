@@ -26,6 +26,9 @@
                         id="Input_Password"
                 />
             </div>
+          <div class="form-group">
+          <v-checkbox v-model="userRegister.isHost" label="host?"></v-checkbox>
+           </div>
             <div class="form-group">
                 <button @click="registerOnClick()" class="btn btn-primary"> Register</button>
             </div>
@@ -40,7 +43,7 @@ import { UserRegister } from '@/types/User'
 export default {
   name: 'Register',
   data: () => ({
-    userRegister: new UserRegister('', '', '', ''),
+    userRegister: new UserRegister('', '', '', '', true),
     registerWasOk: null,
     message: ''
   }),

@@ -59,17 +59,33 @@
                         </v-menu>
                     </v-col>
                     <v-col cols="12" sm="6" md="3">
-                        <v-text-field
-                                hide-details
-                                :min="1"
-                                single-line
-                                type="number"
-                                label="Guests"
-                        />
+                      <v-menu bottom offset-y :close-on-content-click="closeOnClick">
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-text-field
+                              v-bind="attrs"
+                              v-on="on"
+                          >
+                          </v-text-field>
+                        </template>
+                        <v-list>
+                          <v-list-item>
+                            <v-list-item-title>Adults</v-list-item-title>
+                            <v-icon @click="request.adults--" >mdi-minus</v-icon>
+                            {{request.adults}}
+                            <v-icon @click="request.adults++" >mdi-plus</v-icon>
+                          </v-list-item>
+                          <v-list-item>
+                            <v-list-item-title>Children</v-list-item-title>
+                            <v-icon @click="request.children--">mdi-minus</v-icon>
+                            {{request.children}}
+                            <v-icon @click="request.children++">mdi-plus</v-icon>
+                          </v-list-item>
+                        </v-list>
+                      </v-menu>
                     </v-col>
                     <v-col cols="12" sm="6" md="3">
                         <v-text-field v-model="request.input"
-                        label="Destination"
+                        label="Destination" required
                         ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="2">
@@ -143,6 +159,8 @@ export default { // todo fix fonts
   data () {
     return {
       request: {
+        adults: 1,
+        children: 0
       },
       data: {},
       menu1: false,
@@ -151,9 +169,7 @@ export default { // todo fix fonts
       select: [1, 2, 3],
       items: [],
       selected: [],
-      rules: {
-        required: v => !!v || 'Required'
-      }
+      closeOnClick: false
     }
   },
   computed: {
@@ -175,22 +191,10 @@ export default { // todo fix fonts
     }
   },
   beforeMount () {
-    // this.getUserLocation();
   },
   methods: {
     async searchRequest () {
-      const request = new Request(
-        'https://localhost:5001/api/v1.0/property/find',
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          mode: 'cors',
-          cache: 'default',
-          body: JSON.stringify(this.request)
-        }
-      )
-      const res = await fetch(request)
-      this.data = await res.json()
+      return this.$api.property.find(this.request).then((r) => { this.data = r.data })
     },
     getScore (value) {
       const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])

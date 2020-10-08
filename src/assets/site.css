@@ -1,6 +1,9 @@
 body{
     font-family: 'Varela Round', sans-serif;
 }
+#logo{
+    font-family: 'Comfortaa', cursive;
+}
 .form-control {
     box-shadow: none;
     font-weight: normal;

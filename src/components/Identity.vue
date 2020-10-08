@@ -1,8 +1,8 @@
 <template>
   <div v-if="isAuthenticated">
-    <v-btn text>{{userEmail}}</v-btn>
-    <v-btn><router-link to="/propertyOwner">Details</router-link></v-btn>
-    <v-btn @click="logoutOnClick">Logout</v-btn>
+    <v-btn text to="/dashboard">{{userEmail}}</v-btn>
+    <v-btn v-if="isHost" class="ma-2" text color="primary" ><router-link to="/propertyOwner" >Details</router-link></v-btn>
+    <v-btn @click="logoutOnClick" text color="primary">Logout</v-btn>
   </div>
   <div v-else>
          <v-btn class="ma-2" text  color="primary"  ><router-link to="/account/login">Login</router-link></v-btn>
@@ -32,6 +32,13 @@ export default {
     },
     isAuthenticated () {
       return store.getters.isAuthenticated
+    },
+    isHost () {
+      if (store.state.jwt) {
+        const decoded = JwtDecode(store.state.jwt)
+        return decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'] === 'host'
+      }
+      return 'null'
     }
   }
 }

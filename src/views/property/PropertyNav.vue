@@ -1,77 +1,49 @@
 <template>
-    <v-card>
-    <v-navigation-drawer
-            v-model="toggle"
-            fixed app
-            expand-on-hover
-            v-bind:height="325"
+  <v-card>
+    <v-tabs
+        v-model="tab"
+        background-color="transparent"
+        grow
     >
-<!--        <v-toolbar :color="$root.themeColor" class="toolbar">-->
-<!--            <router-link :to="{ name: 'Home' }">-->
-<!--            </router-link>-->
-<!--            <router-link :to="{ name: 'Home' }" class="text">-->
-<!--                Vue Admin Template-->
-<!--            </router-link>-->
-<!--        </v-toolbar>-->
-        <v-list dense>
-            <v-list-item>
-                <v-list-item-content @click="changeRoute('Info', 1)">
-                    <v-list-item-title>
-                        Main
-                    </v-list-item-title>
-                    <!--                <v-list-tile-title :class="[{'active': selectedIndex === 1}, 'item-title' ]" >{{ $t('dashboard') }}</v-list-tile-title>-->
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content @click="changeRoute('Rooms', 2)">
-                    <v-list-item-title>
-                        Rooms
-                    </v-list-item-title>
-                    <!--                <v-list-tile-title :class="[{'active': selectedIndex === 2}, 'item-title' ]"> {{ $t('calendar') }}</v-list-tile-title>-->
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title>
-                        Reservations
-                    </v-list-item-title>
-                    <!--                <v-list-tile-title :class="[{'active': selectedIndex === 2}, 'item-title' ]"> {{ $t('calendar') }}</v-list-tile-title>-->
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title>
-                        Calendar
-                    </v-list-item-title>
-                    <!--                <v-list-tile-title :class="[{'active': selectedIndex === 2}, 'item-title' ]"> {{ $t('calendar') }}</v-list-tile-title>-->
-                </v-list-item-content>
-            </v-list-item>
-        </v-list>
-    </v-navigation-drawer>
-    </v-card>
+      <v-tab>
+        Rooms
+      </v-tab>
+      <v-tab>
+        Reservations
+      </v-tab>
+      <v-tab>
+        Policies
+      </v-tab>
+    </v-tabs>
+    <v-spacer></v-spacer>
+    <v-tabs-items
+        v-model="tab"
+    >
+      <v-tab-item>
+       <PropertyRooms/>
+      </v-tab-item>
+      <v-tab-item>
+        <Reservations/>
+      </v-tab-item>
+      <v-tab-item>
+        <Policy/>
+      </v-tab-item>
+    </v-tabs-items>
+  </v-card>
 </template>
 
 <script>
+import PropertyRooms from '@/views/property/rooms/PropertyRooms'
+import Reservations from '@/views/property/Reservations'
+import Policy from '@/views/property/Policy'
 export default {
-  props: {
-    toggle: {
-      type: Boolean,
-      required: false,
-      default: true
-    }
-  },
-
+  components: { Policy, PropertyRooms, Reservations },
   data () {
     return {
-      selectedIndex: 1
+      tab: null
     }
   },
-
   methods: {
-    changeRoute (routeName, selectedIndex) {
-      this.selectedIndex = selectedIndex
-      return this.$router.push({ name: routeName })
-    }
   }
 }
 </script>

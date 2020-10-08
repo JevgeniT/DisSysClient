@@ -25,7 +25,8 @@ export default class AccountService {
         email: user.email,
         password: user.password,
         firstname: user.firstname,
-        lastname: user.lastname
+        lastname: user.lastname,
+        isHost: user.isHost
       })
       .then(response => {
         if (response.status === 200) {

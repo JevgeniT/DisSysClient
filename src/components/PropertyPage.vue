@@ -4,51 +4,6 @@
             <div class="col-md-1">
             </div>
             <div class="col-md-10">
-                <div class="carousel slide" id="carousel-944528">
-                    <ol class="carousel-indicators">
-                        <li data-slide-to="0" data-target="#carousel-944528" class="active">
-                        </li>
-                        <li data-slide-to="1" data-target="#carousel-944528">
-                        </li>
-                        <li data-slide-to="2" data-target="#carousel-944528">
-                        </li>
-                    </ol>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active">
-                            <img class="d-block w-100" alt="Carousel Bootstrap First" src="https://www.layoutit.com/img/sports-q-c-1600-500-1.jpg" />
-                            <div class="carousel-caption">
-                                <h4>
-                                    First Thumbnail label
-                                </h4>
-                                <p>
-                                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" alt="Carousel Bootstrap Second" src="https://www.layoutit.com/img/sports-q-c-1600-500-2.jpg" />
-                            <div class="carousel-caption">
-                                <h4>
-                                    Second Thumbnail label
-                                </h4>
-                                <p>
-                                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
-                                </p>
-                            </div>
-                        </div>
-                        <div class="carousel-item">
-                            <img class="d-block w-100" alt="Carousel Bootstrap Third" src="https://www.layoutit.com/img/sports-q-c-1600-500-3.jpg" />
-                            <div class="carousel-caption">
-                                <h4>
-                                    Third Thumbnail label
-                                </h4>
-                                <p>
-                                    Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.
-                                </p>
-                            </div>
-                        </div>
-                    </div> <a class="carousel-control-prev" href="#carousel-944528" data-slide="prev"><span class="carousel-control-prev-icon"></span> <span class="sr-only">Previous</span></a> <a class="carousel-control-next" href="#carousel-944528" data-slide="next"><span class="carousel-control-next-icon"></span> <span class="sr-only">Next</span></a>
-                </div>
                 <div class="row">
                     <div class="col-md-8">
                         <h3>
@@ -57,18 +12,21 @@
                                         class="ma-2"
                                         secondary
                                 >
-                                    {{data.type}}
+                                  {{ property.type }}
                                 </v-chip>
-                                {{data.name}}
-                                <v-subheader> <i class="fas fa-map-marker-alt"></i>
-                                    {{data.address}}, {{data.country}}</v-subheader>
+                              {{ property.name }}
+                              <v-subheader> <i class="fas fa-map-marker-alt"></i>
+                                {{ property.address }}, {{ property.country }}</v-subheader>
                             </div>
                         </h3>
-                        <dl>
-                            <dd>
-                              #description {{data.description}}
-                            </dd>
-                        </dl>
+                      <h3>
+                        About
+                      </h3>
+                      <blockquote class="blockquote">
+                        <p class="mb-0">
+                          {{property.description}}
+                        </p>
+                      </blockquote>
                         <h3>
                             h3. Lorem ipsum dolor sit amet.
                         </h3>
@@ -76,39 +34,7 @@
                             <li class="list-item">
                                 Lorem ipsum dolor sit amet
                             </li>
-                            <li class="list-item">
-                                Consectetur adipiscing elit
-                            </li>
-                            <li class="list-item">
-                                Integer molestie lorem at massa
-                            </li>
-                            <li class="list-item">
-                                Facilisis in pretium nisl aliquet
-                            </li>
-                            <li class="list-item">
-                                Nulla volutpat aliquam velit
-                            </li>
-                            <li class="list-item">
-                                Faucibus porta lacus fringilla vel
-                            </li>
-                            <li class="list-item">
-                                Aenean sit amet erat nunc
-                            </li>
-                            <li class="list-item">
-                                Eget porttitor lorem
-                            </li>
                         </ol>
-                        <h3>
-                            h3. Lorem ipsum dolor sit amet.
-                        </h3>
-                        <blockquote class="blockquote">
-                            <p class="mb-0">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.
-                            </p>
-                            <footer class="blockquote-footer">
-                                Someone famous in <cite>Source Title</cite>
-                            </footer>
-                        </blockquote>
                     </div>
                     <div class="col-md-4">
                         <v-chip
@@ -195,114 +121,77 @@
                     />
                 </v-col>
                 <v-col cols="12" sm="6" md="2">
-                    <v-btn type="submit" id="submit" v-on:click="getDates"> Submit</v-btn>
+                    <v-btn v-on:click="getDates"> Submit</v-btn>
                 </v-col>
             </v-row></v-card-text>
-            <v-alert :value="alert"
-                     color="pink"
-                     type="error"
-                     border="top"
-                     transition="slide-y-transition">
-                Please choose dates first
-            </v-alert>
             </v-card>
         </v-container>
-        <div class="divTable unstyledTable">
-            <div class="divTableHeading">
-                <div class="divTableRow">
-                    <div class="divTableHead" style="width: 20%">Room type</div>
-                    <div class="divTableHead" style="width: 5%">Sleeps</div>
-                    <template v-if="!hideChoice">
-                        <div class="divTableHead" style="width: 10%">Todays's Price</div>
-                        <div class="divTableHead" style="width: 30%">Your Choises</div>
-                        <div class="divTableHead" >Select an room </div>
-                        <div class="divTableHead"></div>
-                    </template>
-                    <template v-else>
-                        <div style="width: 50%" class="divTableHead"></div>
-                        <div style="width: 25%" class="divTableHead"></div>
-                    </template>
-                </div>
-            </div>
-            <div class="divTableBody" v-for="item in data.propertyRooms" v-bind:key="item.id">
-                <div class="divTableRow">
-                    <div class="divTableCell">
-                         <input type="hidden" :set="reservation.roomId = item.id">
-                        <property-room v-bind:r-id="item.id" :r-name="item.name">
-                        </property-room>
-                        <p>{{item.bedType}}</p>
-                        <a v-for="i in item.roomFacilities" v-bind:key="i.id">
-                            <a class="fname"><i class="fas fa-check">{{i.name}}</i></a>
-                        </a>
-                        <a class="fname"><i class="fas fa-check">{{item.size}} m²</i></a>
-                    </div>
-                    <div class="divTableCell">
-                        <a v-for="x in item.adultsCapacity" v-bind:key="x.id">
-                            <i class="fas fa-user"></i>
-                        </a>
-                    </div>
-                    <template v-if="!hideChoice">
-                    <div class="divTableCell"></div>
-                    <div v-if="!hideChoice" class="divTableCell">
-                        <div class="divTableRow"  v-for="d in data2" v-bind:key="d.id" :set="reservation.policy = d.policy.name">
-                            {{d.policy.name}}
-                        </div>
-                    </div>
-                    <div v-if="!hideChoice" class="divTableCell">
-                        <div v-for="d in data2" class="input-group" v-bind:key="d.name">
-                            <label>
-                                <select class="custom-select" v-model="reservation.quantity">
-                                    <option selected>Choose...</option>
-                                    <option v-for="x in d.roomsAvailable" v-bind:key="x.id">{{x}}</option>
-                                </select>
-                            </label>
-                        </div>
-                    </div>
-                    <div v-if="!hideChoice" class="divTableCell"><button class="btn btn-primary" type="submit" v-on:click="submitReservation">Reserve</button> </div>
-                    </template>
-                    <template v-else>
-                        <div style="width: 50%" class="divTableCell"></div>
-                        <div style="width: 25%" class="divTableCell"><button class="btn btn-primary">Prices</button></div>
-                    </template>
-                </div>
-            </div>
-        </div>
+      <v-col v-for="(room, x) in property.propertyRooms" v-bind:key="room.id" cols="12">
+        <v-card>
+          <div class="d-flex">
+            <v-avatar class="ma-3" size="170" tile>
+              <v-img src="https://cdn.vuetifyjs.com/images/cards/house.jpg"></v-img>
+            </v-avatar>
+             <v-card-text>
+               <v-card-title class="headline">{{room.name}}</v-card-title>
+                <v-list v-if="room.dates" >
+                  <v-list-item-group v-model="reservation.roomDtos[x]">
+                   <template v-for="(item, i) in room.policy">
+                     <v-divider
+                         v-if="!item"
+                         :key="`divider-${i}`"
+                     ></v-divider>
+                     <v-list-item
+                         v-else
+                         :key="`item-${i}`"
+                         :value="setDto(room.id, room.policy[i].id)"
+                         active-class="deep-purple--text text--accent-4">
+                       <template v-slot:default="{ active }">
+                         <v-list-item-content>
+                           <v-list-item-title v-text="item.name"></v-list-item-title>
+                         </v-list-item-content>
+                         <v-list-item-action>
+                           <v-checkbox
+                               :input-value="active"
+                               color="deep-purple accent-4"
+                           ></v-checkbox>
+                         </v-list-item-action>
+                       </template>
+                     </v-list-item>
+                   </template>
+                 </v-list-item-group>
+                </v-list>
+            </v-card-text>
+            <v-card-actions>
+              <v-btn @click="submitReservation">Submit</v-btn>
+            </v-card-actions>
+          </div>
+        </v-card>
+      </v-col>
     </div>
 </template>
 <script>
-import PropertyRoom from '@/components/RoomDetails'
-
 export default {
   name: 'App',
-  components: {
-    PropertyRoom
-  },
   data: () => ({
-    reservation: {
-      roomId: null,
-      quantity: null,
-      policy: null
-    },
+    reservation: { roomDtos: []},
     menu1: false,
     modal: false,
     menu2: false,
-    alert: false,
-    data: {},
-    data2: {},
-    date: null,
+    property: {
+      propertyRooms:{}
+    },
     search: {
       from: null,
       to: null,
-      propertyId: NaN
+      pId: null
     },
     days: null,
     reviews: null,
-    dialog: false
+    dialog: false,
+    pId: null,
   }),
   computed: {
-    hideChoice: function () {
-      return !this.data2.length
-    },
     minCheckIn () {
       const dayIn = new Date(this.search.from)
       const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate())
@@ -315,62 +204,46 @@ export default {
     }
   },
   beforeMount () {
-    this.getProperty() // fix
-    this.GetReviews()
-  },
-  mounted: function () {
-    if (alert) {
-      this.hideAlert()
-    }
+    this.getProperty()
+    // this.GetReviews()
   },
   methods: {
     async getProperty () {
-      const id = this.$route.params.id
-      const token = localStorage.getItem('jwt')
-      const res = await fetch('https://localhost:5001/api/v1.0/property/' + id, {
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + token
+      this.pId = this.$route.params.id
+      return await this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
+    },
+    async getDates (){
+      this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
+      this.search.pId = this.$route.params.id
+      console.log(this.property)
+      return await this.$api.dates.check(this.search).then((r) => {
+        if (r.status === 200) {
+         this.$api.policies.all({ pId: this.pId }).then((r1) => {
+            this.property.propertyRooms.forEach(x=>{
+              x.policy  = r1.data
+              x.dates = r.data.find(a => a.roomId === x.id)
+             })
+          })
+          this.$forceUpdate() // TODO
         }
       })
-      const data = await res.json()
-      this.data = data
-    },
-    async getDates () {
-      this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
-      const token = localStorage.getItem('jwt')
-      this.search.propertyId = this.$route.params.id
-      const res = await fetch('https://localhost:5001/api/v1.0/availability/checkdates', {
-        method: 'POST',
-        headers: {
-          Authorization: 'Bearer ' + token, 'Content-Type': 'application/json'
-        },
-        mode: 'cors',
-        cache: 'default',
-        body: JSON.stringify(this.search)
-      })
-      this.data2 = await res.json()
     },
     async GetReviews () {
-      const id = this.$route.params.id
-      const token = localStorage.getItem('jwt')
-      const res = await fetch('https://localhost:5001/api/v1.0/review/property/' + id, {
-        method: 'GET',
-        headers: {
-          Authorization: 'Bearer ' + token
-        }
-      })
-      this.reviews = await res.json()
-    },
-    hideAlert: function () {
-      window.setInterval(() => {
-        this.alert = false
-      }, 3000)
+      const pId = this.$route.params.id
+      return this.$api.review.all(pId).then((r) => { this.reviews = r.data })
     },
     async submitReservation () {
-      console.log(this.reservation.quantity)
-      console.log(this.reservation.roomId)
-      console.log(this.reservation.policy)
+      this.reservation.propertyId = this.$route.params.id
+      this.reservation.checkInDate = this.search.from
+      this.reservation.checkOutDate = this.search.to
+      this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
+        if (r.status === 200) {
+          console.log('ok')
+        }
+      })
+    },
+    setDto(rId, pId){
+      return {roomId: rId, policyId: pId}
     }
   }
 }

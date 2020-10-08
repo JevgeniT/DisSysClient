@@ -1,10 +1,11 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import AccountService from '@/services/AccountService'
-
+import { policyModule } from './policyModule'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  namespaced: true,
   state: {
     jwt: null
   },
@@ -34,5 +35,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    policyModule
   }
 })

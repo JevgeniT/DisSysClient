@@ -40,8 +40,7 @@ export default {
   },
   methods: {
     loginOnClick () {
-      if (
-        this.user.email.length > 0 &&
+      if (this.user.email.length > 0 &&
          this.user.password.length > 0
       ) {
         store
