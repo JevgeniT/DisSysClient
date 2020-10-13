@@ -1,13 +1,12 @@
 <template>
   <v-container>
-    <v-row dense>
+    <v-row >
       <v-col cols="12">
-        <v-card elevation="0">
-          <v-expansion-panels>
+          <v-expansion-panels >
             <v-expansion-panel>
-              <v-expansion-panel-header>
+              <v-expansion-panel-header >
                 <template v-slot:default="{ open }">
-                  <v-row no-gutters>
+                  <v-row >
                     <v-btn class="mx-2" fab dark color="indigo" small>
                       <v-icon dark>mdi-plus</v-icon>
                     </v-btn>
@@ -15,38 +14,66 @@
                         cols="8"
                         class="text--secondary">
                       <v-fade-transition leave-absolute>
-                <span v-if="open">
-                </span>
+                       <span v-if="open"></span>
                       </v-fade-transition>
                     </v-col>
                   </v-row>
                 </template>
               </v-expansion-panel-header>
-              <v-expansion-panel-content>
-                <v-text-field v-model="room.name"
-                    label="Name"
-                ></v-text-field>
-                <v-text-field v-model.number="room.size"
-                              label="Size"
-                ></v-text-field>
-                <v-select label="Bed Type" :items="bed" v-model="room.bed">
-                </v-select>
-                <v-text-field v-model.number="room.adultsOccupancy"
-                    label="Adults occupancy"
-                ></v-text-field>
-                <v-text-field v-model.number="room.childOccupancy"
-                    label="Child occupancy"
-                ></v-text-field>
-                <v-text-field v-model="room.description"
-                    label="Description"
-                ></v-text-field>
-                <v-btn text color="primary" @click="createRoom">
-                  Save
-                </v-btn>
+              <v-expansion-panel-content >
+                <v-row>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  >
+                    <v-text-field v-model="room.name"
+                                  label="Name"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  >
+                    <v-text-field v-model.number="room.size"
+                                  label="Size"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  >
+                    <v-select label="Bed Type" :items="bed" v-model="room.bed">
+                    </v-select>
+                  </v-col>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  >
+                    <v-text-field v-model.number="room.adultsOccupancy"
+                                  label="Adults occupancy"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  >
+                    <v-text-field v-model.number="room.childOccupancy"
+                                  label="Child occupancy"
+                    ></v-text-field>
+                  </v-col>
+                  <v-col cols="12" sm="6">
+                    <v-text-field v-model="room.description"
+                                  label="Description"
+                    ></v-text-field>
+                  </v-col>
+                  <v-btn text color="primary" outlined @click="createRoom">
+                    Save
+                  </v-btn>
+                </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
           </v-expansion-panels>
-        </v-card>
+         <v-divider></v-divider>
       </v-col>
       <room-component :rooms="rooms" :owner="true">
       </room-component>
@@ -88,5 +115,7 @@ export default {
 </script>
 
 <style scoped>
-
+.v-expansion-panel::before {
+  box-shadow: none;
+}
 </style>

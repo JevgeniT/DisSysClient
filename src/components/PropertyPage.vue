@@ -104,8 +104,7 @@
                         <v-date-picker no-title scrollable
                                 v-model="search.to"
                                 @change="menu2 = false"
-                                :min="minCheckOut"
-                                :show-current="true"
+                               :min="minCheckOut"
                         >
                             <v-spacer></v-spacer>
                         </v-date-picker>
@@ -118,7 +117,17 @@
                             single-line
                             type="number"
                             label="Guests"
+                            v-model="search.adults"
                     />
+                  <v-text-field
+                      hide-details
+                      :min="0"
+                      single-line
+                      type="number"
+                      label="Child"
+                      :value="0"
+                      v-model="search.children"
+                  />
                 </v-col>
                 <v-col cols="12" sm="6" md="2">
                     <v-btn v-on:click="getDates"> Submit</v-btn>
@@ -134,8 +143,8 @@
             </v-avatar>
              <v-card-text>
                <v-card-title class="headline">{{room.name}}</v-card-title>
-                <v-list v-if="room.dates" >
-                  <v-list-item-group v-model="reservation.roomDtos[x]">
+                <v-list v-if="room.dates">
+                  <v-list-item-group  v-model="reservation.roomDtos[x]">
                    <template v-for="(item, i) in room.policy">
                      <v-divider
                          v-if="!item"
@@ -148,7 +157,8 @@
                          active-class="deep-purple--text text--accent-4">
                        <template v-slot:default="{ active }">
                          <v-list-item-content>
-                           <v-list-item-title v-text="item.name"></v-list-item-title>
+                           <v-list-item-title >{{roomPrice(room.dates.pricePerNightForAdult, room.dates.pricePerNightForChild, room.policy[i].priceCoefficient)}}</v-list-item-title>
+                           <v-list-item-subtitle v-text="item.name">random text </v-list-item-subtitle>
                          </v-list-item-content>
                          <v-list-item-action>
                            <v-checkbox
@@ -171,6 +181,8 @@
     </div>
 </template>
 <script>
+import helpers from "@/services/helpers";
+
 export default {
   name: 'App',
   data: () => ({
@@ -192,15 +204,12 @@ export default {
     pId: null,
   }),
   computed: {
-    minCheckIn () {
-      const dayIn = new Date(this.search.from)
-      const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate())
-      return endDate.toISOString().slice(0, 10)
-    },
+    minCheckIn () {return helpers.minCheckIn(Date.now())},
     minCheckOut () {
       const dayOut = new Date(this.minCheckIn)
       const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3)
       return endDate.toISOString().slice(0, 10)
+
     }
   },
   beforeMount () {
@@ -213,9 +222,9 @@ export default {
       return await this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
     },
     async getDates (){
+
       this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
       this.search.pId = this.$route.params.id
-      console.log(this.property)
       return await this.$api.dates.check(this.search).then((r) => {
         if (r.status === 200) {
          this.$api.policies.all({ pId: this.pId }).then((r1) => {
@@ -236,14 +245,24 @@ export default {
       this.reservation.propertyId = this.$route.params.id
       this.reservation.checkInDate = this.search.from
       this.reservation.checkOutDate = this.search.to
-      this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
+      this.reservation.roomDtos = this.reservation.roomDtos.filter(r=> r !== null)
+      this.reservation.adults = Number(this.search.adults)
+      this.reservation.children = Number(this.search.children)
+       this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
         if (r.status === 200) {
           console.log('ok')
         }
       })
     },
     setDto(rId, pId){
-      return {roomId: rId, policyId: pId}
+      const found = this.property.propertyRooms.find(x=> x.id === rId && x.policy.find(p=> p.id === pId))
+      const a = found.dates.pricePerNightForAdult
+      const c = found.policy.filter(p=> p.id === pId)[0].priceCoefficient
+      return {roomId: rId, policyId: pId, roomTotalPrice: this.roomPrice(a,0,c)}
+    },
+    roomPrice(adultPrice, childPrice, coeff) {
+      const days = new Date(this.search.to).getDate() - new Date(this.search.from).getDate()
+      return (days *( adultPrice * this.search.adults + this.search.children * childPrice))  * coeff
     }
   }
 }
@@ -264,29 +283,4 @@ export default {
     #submit{
         margin-top: 10px;
     }
-    div.unstyledTable {
-        width: 100%;
-        height: 200px;
-        text-align: center;
-        border-collapse: collapse;
-    }
-    .divTable.unstyledTable .divTableCell, .divTable.unstyledTable .divTableHead {
-        border: 1px solid #AAAAAA;
-        padding: 10px 2px;
-    }
-    .divTable.unstyledTable .divTableHeading {
-        background: #DDDDDD;
-    }
-    .divTable.unstyledTable .divTableHeading .divTableHead {
-        font-weight: normal;
-    }
-    .unstyledTable .tableFootStyle {
-        font-weight: bold;
-    }
-    .divTable{ display: table; }
-    .divTableRow { display: table-row; }
-    .divTableHeading { display: table-header-group;}
-    .divTableCell, .divTableHead { display: table-cell;}
-    .divTableHeading { display: table-header-group;}
-    .divTableBody { display: table-row-group;}
 </style>

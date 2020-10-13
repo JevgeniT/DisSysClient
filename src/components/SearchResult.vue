@@ -3,7 +3,7 @@
         <v-form @submit.prevent="searchRequest">
             <v-container>
                 <v-row>
-                    <v-col cols="12" sm="6" md="2">
+                    <v-col cols="12" sm="6" md="3">
                         <v-menu
                                 v-model="menu1"
                                 :close-on-content-click="false"
@@ -15,8 +15,9 @@
                         >
                             <template v-slot:activator="{ on }">
                                 <v-text-field
-                                        v-model="request.from"
+                                        v-model="dateRangeText"
                                         label="Check In"
+                                        prepend-icon="mdi-calendar"
                                         v-on="on"
                                         readonly
                                         clearable
@@ -24,44 +25,20 @@
                                 ></v-text-field>
                             </template>
                             <v-date-picker no-title scrollable
-                                           v-model="request.from"
-                                           @change="menu1 = false"
+                                           range
+                                           v-model="dates"
                                            :min="minCheckIn"
+                                           @change="menu1 = false"
                             >
                             </v-date-picker>
                         </v-menu>
                     </v-col>
-                    <v-col cols="12" sm="6" md="2">
-                        <v-menu
-                                v-model="menu2"
-                                :close-on-content-click="false"
-                                transition="scale-transition"
-                                offset-y
-                                max-width="290px"
-                        >
-                            <template v-slot:activator="{ on }">
-                                <v-text-field
-                                        :value="request.to"
-                                        clearable
-                                        label="Check out"
-                                        v-on="on"
-                                        @click:clear="request.to = null"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker no-title scrollable
-                                           v-model="request.to"
-                                           @change="menu2 = false"
-                                           :min="minCheckOut"
-                                           :show-current="true"
-                            >
-                                <v-spacer></v-spacer>
-                            </v-date-picker>
-                        </v-menu>
-                    </v-col>
+
                     <v-col cols="12" sm="6" md="3">
-                      <v-menu bottom offset-y :close-on-content-click="closeOnClick">
+                       <v-menu bottom offset-y :close-on-content-click="closeOnClick">
                         <template v-slot:activator="{ on, attrs }">
                           <v-text-field
+                              :label="guests"
                               v-bind="attrs"
                               v-on="on"
                           >
@@ -70,13 +47,13 @@
                         <v-list>
                           <v-list-item>
                             <v-list-item-title>Adults</v-list-item-title>
-                            <v-icon @click="request.adults--" >mdi-minus</v-icon>
+                            <v-icon @click="request.adults>0?request.adults--:request.adults" >mdi-minus</v-icon>
                             {{request.adults}}
                             <v-icon @click="request.adults++" >mdi-plus</v-icon>
                           </v-list-item>
                           <v-list-item>
                             <v-list-item-title>Children</v-list-item-title>
-                            <v-icon @click="request.children--">mdi-minus</v-icon>
+                            <v-icon @click="request.children>0?request.children--:request.children">mdi-minus</v-icon>
                             {{request.children}}
                             <v-icon @click="request.children++">mdi-plus</v-icon>
                           </v-list-item>
@@ -84,12 +61,10 @@
                       </v-menu>
                     </v-col>
                     <v-col cols="12" sm="6" md="3">
-                        <v-text-field v-model="request.input"
-                        label="Destination" required
-                        ></v-text-field>
+                        <v-text-field v-model="request.input" label="Destination" required></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="2">
-                        <v-btn type="submit" id="submit" v-on:click="searchRequest"> Submit</v-btn>
+                        <v-btn type="submit" id="submit" v-on:click="searchRequest">Submit</v-btn>
                     </v-col>
                 </v-row>
             </v-container>
@@ -151,10 +126,13 @@
         </div>
         </div>
         </div>
+
     </div>
 </template>
 <script>
-export default { // todo fix fonts
+import helpers from "@/services/helpers";
+
+export default {
   name: 'SearchResult',
   data () {
     return {
@@ -164,15 +142,19 @@ export default { // todo fix fonts
       },
       data: {},
       menu1: false,
-      menu2: false,
       score: '',
-      select: [1, 2, 3],
-      items: [],
       selected: [],
-      closeOnClick: false
+      closeOnClick: false,
+      dates: []
     }
   },
   computed: {
+    guests () {
+      return `Adults ${this.request.adults} Children ${this.request.children}`
+    },
+    dateRangeText () { // TODO make input larger
+      return this.dates.length>1?`${helpers.utcDates(this.dates[0])} - ${helpers.utcDates(this.dates[1])}`:`Check-in - Check-out`
+    },
     filtered: function () {
       if (!this.selected.length) {
         return this.data
@@ -180,21 +162,16 @@ export default { // todo fix fonts
       return this.data.filter(p => this.selected.includes(p.type || p.score))
     },
     minCheckIn () {
-      const dayIn = new Date(Date.now())
-      const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate() + 1)
-      return endDate.toISOString().slice(0, 10)
-    },
-    minCheckOut () {
-      const dayOut = new Date(this.minCheckIn)
-      const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 2)
-      return endDate.toISOString().slice(0, 10)
+      return helpers.minCheckIn(Date.now())
     }
   },
   beforeMount () {
   },
   methods: {
     async searchRequest () {
-      return this.$api.property.find(this.request).then((r) => { this.data = r.data })
+      this.request.from = this.dates[0]
+      this.request.to  = this.dates[1]
+      return await this.$api.property.find(this.request).then((r) => { this.data = r.data })
     },
     getScore (value) {
       const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])

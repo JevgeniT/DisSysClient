@@ -1,7 +1,7 @@
 <template>
 <v-container>
   <v-col v-for="room in rooms" v-bind:key="room.id" cols="12">
-    <v-card>
+    <v-card class="elevation-0">
       <div class="d-flex" >
         <v-avatar
             class="ma-3"
@@ -22,6 +22,7 @@
         <slot></slot>
       </div>
     </v-card>
+    <v-divider></v-divider>
   </v-col>
 </v-container>
 </template>
@@ -49,7 +50,6 @@ export default {
   }
 }
 </script>
-
 <style scoped>
 
 </style>

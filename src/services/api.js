@@ -26,7 +26,7 @@ api.interceptors.request.use(
 const property = {
   all: params => api.get('/property', { params }),
   find: params => api.get('/property/find', { params }),
-  byId: params => api.get(`/property/${params}`, { params }),
+  byId: params => api.get(`/property/${params}`, params),
   post: params => api.post('/property', params, conf),
   delete: params => api.delete('/property', { params })
 }
@@ -34,19 +34,20 @@ const review = {
   all: params => api.get('/reviews', { params })
 }
 const dates = {
-  check: params => api.get('/availability/checkdates', { params }),
+  check: params => api.get('/availability/check', { params }),
   post: params => api.post('/availability', params, conf),
   allFor: params => api.get('/availability', { params })
 
 }
 const reservations = {
   all: params => api.get('/reservation', { params }),
+  byId: params => api.get(`/reservation/${params}`,params),
   post: params => api.post('/reservation', params, conf)
 }
 const rooms = {
   all: params => api.get(`/room/${params}`, { params }),
   post: params => api.post('/room', params, conf),
-  byId: params => api.get(`/room/${params}`, { params })
+  byId: params => api.get(`/room/${params}`, params)
 }
 const policies = {
   all: params => api.get('/policy', { params }),

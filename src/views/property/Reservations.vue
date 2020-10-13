@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import helpers from "@/services/helpers";
+
 export default {
   name: 'Reservations',
   data () {
@@ -35,7 +37,7 @@ export default {
         { text: 'Check in', value: 'checkInDate' },
         { text: 'Check out', value: 'checkOutDate' },
         { text: 'Price', value: 'totalPrice' },
-        { text: 'Status', value: 'isCancelled' }
+        { text: 'Active', value: 'active' }
       ],
       reservations: []
     }
@@ -45,9 +47,14 @@ export default {
   },
   methods: {
     async getReservations () {
-      const res = this.$api.reservations.all({ pId: this.$route.params.id }).then((r) => { this.reservations = Object.values(r.data) })
-      console.log(this.reservations)
-      return res
+      return await this.$api.reservations.all({ pId: this.$route.params.id }).then((r) =>
+      {
+        this.reservations = Object.values(r.data)
+        this.reservations.map(function (d) {
+          d.checkInDate = helpers.isoDate(d.checkInDate)
+          d.checkOutDate = helpers.isoDate(d.checkOutDate)
+        })
+      })
     }
   }
 }
