@@ -13,7 +13,10 @@ export const policyModule = {
       await api.policies.all({ pId: id })
         .then((response) => {
           commit('setPolicies', response.data)
-        })
+        }).catch(({response}) =>
+          {
+
+          })
     }
   },
   getters: {

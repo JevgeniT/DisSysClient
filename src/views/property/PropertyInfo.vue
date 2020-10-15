@@ -11,7 +11,6 @@
         <v-spacer></v-spacer>
     </div>
 </template>
-
 <script>
 import PropertyNav from '@/views/property/PropertyNav'
 

@@ -53,89 +53,14 @@
             <div class="col-md-1">
             </div>
         </div>
-        <v-container id="ctr">
-            <v-card max-width="100%"> <v-card-text>
-            <v-row>
-                <v-col cols="12" sm="6" md="3">
-                    <v-menu
-                            v-model="menu1"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="290px"
-                            max-width="290px"
-                    >
-                        <template v-slot:activator="{ on }">
-                            <v-text-field
-                                    v-model="search.from"
-                                    label="Check In"
-                                    v-on="on"
-                                    readonly
-                                    clearable
-                                    @click:clear="search.from = null"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker no-title scrollable
-                                v-model="search.from"
-                                @change="menu1 = false"
-                                :min="minCheckIn"
-                        >
-                        </v-date-picker>
-                    </v-menu>
-                </v-col>
-                <v-col cols="12" sm="6" md="3">
-                    <v-menu
-                            v-model="menu2"
-                            :close-on-content-click="false"
-                            transition="scale-transition"
-                            offset-y
-                            max-width="290px"
-                    >
-                        <template v-slot:activator="{ on }">
-                            <v-text-field
-                                    :value="search.to"
-                                    clearable
-                                    label="Check out"
-                                    v-on="on"
-                                    @click:clear="search.to = null"
-                            ></v-text-field>
-                        </template>
-                        <v-date-picker no-title scrollable
-                                v-model="search.to"
-                                @change="menu2 = false"
-                               :min="minCheckOut"
-                        >
-                            <v-spacer></v-spacer>
-                        </v-date-picker>
-                    </v-menu>
-                </v-col>
-                <v-col cols="12" sm="6" md="3">
-                    <v-text-field
-                            hide-details
-                            :min="1"
-                            single-line
-                            type="number"
-                            label="Guests"
-                            v-model="search.adults"
-                    />
-                  <v-text-field
-                      hide-details
-                      :min="0"
-                      single-line
-                      type="number"
-                      label="Child"
-                      :value="0"
-                      v-model="search.children"
-                  />
-                </v-col>
-                <v-col cols="12" sm="6" md="2">
-                    <v-btn v-on:click="getDates"> Submit</v-btn>
-                </v-col>
-            </v-row></v-card-text>
-            </v-card>
+        <v-container >
+          <search-component>
+            <v-col style="padding-top: 2%">
+                <v-btn v-on:click="getDates"> Submit</v-btn>
+            </v-col>
+          </search-component>
         </v-container>
-      <v-col v-for="(room, x) in property.propertyRooms" v-bind:key="room.id" cols="12">
+      <v-col v-for="(room, x) in property.propertyRooms" v-bind:key="room.id">
         <v-card>
           <div class="d-flex">
             <v-avatar class="ma-3" size="170" tile>
@@ -182,9 +107,11 @@
 </template>
 <script>
 import helpers from "@/services/helpers";
+import SearchComponent from "@/components/SearchComponent";
 
 export default {
   name: 'App',
+  components: {SearchComponent},
   data: () => ({
     reservation: { roomDtos: []},
     menu1: false,
@@ -193,11 +120,8 @@ export default {
     property: {
       propertyRooms:{}
     },
-    search: {
-      from: null,
-      to: null,
-      pId: null
-    },
+    request: SearchComponent.data,
+    // dates: [],
     days: null,
     reviews: null,
     dialog: false,
@@ -209,7 +133,6 @@ export default {
       const dayOut = new Date(this.minCheckIn)
       const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3)
       return endDate.toISOString().slice(0, 10)
-
     }
   },
   beforeMount () {
@@ -223,9 +146,12 @@ export default {
     },
     async getDates (){
 
-      this.days = (new Date(this.search.to).getDate() - new Date(this.search.from).getDate())
-      this.search.pId = this.$route.params.id
-      return await this.$api.dates.check(this.search).then((r) => {
+      console.log(this.request())
+      this.request.pId = this.$route.params.id
+      this.request.from = this.dates[0]
+      this.request.to  = this.dates[1]
+      this.days = (new Date(this.request.to).getDate() - new Date(this.request.from).getDate())
+      return await this.$api.dates.check(this.request).then((r) => {
         if (r.status === 200) {
          this.$api.policies.all({ pId: this.pId }).then((r1) => {
             this.property.propertyRooms.forEach(x=>{
@@ -269,18 +195,4 @@ export default {
 </script>
 
 <style scoped>
-    .fname{
-        font-size: .75rem;
-        color: #008009;
-    }
-    #ctr{
-        /*padding-bottom: 2px;*/
-        margin-bottom: 10px;
-        width: 100%;
-        padding-right: 2px;
-        padding-left: 2px;
-    }
-    #submit{
-        margin-top: 10px;
-    }
 </style>

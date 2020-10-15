@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import AccountService from '@/services/AccountService'
 import { policyModule } from './policyModule'
+import { searchModule } from './searchModule'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -35,6 +36,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    policyModule
+    policyModule, searchModule
   }
 })
