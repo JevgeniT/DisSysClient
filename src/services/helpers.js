@@ -16,6 +16,12 @@ export default{
         return new Date(val).toISOString().slice(0, 10)
     },
     utcDates(val) {
-        return new Date(val).toUTCString().substr(0,16)
+        return new Date(val).toDateString()
+    },
+    monthAndDay(f, t) {
+        if (new Date(f).getFullYear() === new Date(t).getFullYear()){
+            return this.utcDates(f).slice(0,10) + ' - ' + this.utcDates(t)
+        }
+        return this.utcDates(f) + '-' + this.utcDates(t)
     }
 }

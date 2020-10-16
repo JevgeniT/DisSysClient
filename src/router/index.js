@@ -25,7 +25,6 @@ export default new VueRouter({
     { path: '/calendar', name: 'Calendar', component: Calendar, props: true },
     { path: '/room/:id', name: 'RoomInfo', component: RoomInfo, props: true },
     { path: '/dashboard', name: 'dashboard', component: Dashboard, props: true },
-    { path: '/reservation/:id', name: 'reservationInfo', component: ReservationInfo, props: true }
-
+    { path: '/reservation/:id', name: 'reservationInfo', component: ReservationInfo, props: true },
   ]
 })
