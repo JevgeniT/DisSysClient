@@ -11,6 +11,7 @@ import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'font-awesome/css/font-awesome.min.css'
 import '@fortawesome/fontawesome-free/css/all.css'
+import currency from 'currency.js'
 Vue.config.productionTip = false
 Vue.prototype.$api = api
 
@@ -24,5 +25,6 @@ new Vue({
   router,
   store,
   plugin,
+  currency,
   render: h => h(App)
 }).$mount('#app')

@@ -3,7 +3,14 @@
       <h3>Properties you own</h3>
       <v-expansion-panels content-class="elevation-0" >
         <v-expansion-panel  >
-          <v-expansion-panel-header ><v-icon>mdi-plus</v-icon></v-expansion-panel-header>
+          <v-expansion-panel-header disable-icon-rotate>
+            <v-icon>mdi-plus</v-icon>
+            <template v-slot:actions>
+              <v-icon color="white">
+                mdi-alert-circle
+              </v-icon>
+            </template>
+          </v-expansion-panel-header>
           <v-expansion-panel-content>
             <v-card class="elevation-1">
               <v-card-title>Create property</v-card-title>
@@ -74,10 +81,6 @@ export default {
       return this.$api.property.all().then((r) => { this.properties = r.data })
     },
     async createProperty () {
-      if (this.$refs.form.validate()){
-        //other codes
-        alert('submitted')
-      }
       return await this.$api.property.post(JSON.stringify(this.property)).then((r) => {
         if (r.status === 201) {
           this.properties.push(r.data)

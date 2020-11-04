@@ -2,11 +2,15 @@ import api from '@/services/api'
 
 export const searchModule = {
     namespaced: true,
-    state: () => ({ response: {} }),
+    state: () => ({ response: {}, request: {} }),
     mutations: {
         setResponse (state, items) {
             state.response = items
+        },
+        setRequest(state, req){
+            state.request = req
         }
+
     },
     actions: {
         async findProperties ({ commit }, request) {
@@ -16,7 +20,6 @@ export const searchModule = {
                 }).catch(({response}) =>
                 {
                     response.data.notFound = true
-
                     commit('setResponse', response.data)
                 })
         },
@@ -24,15 +27,15 @@ export const searchModule = {
             await api.dates.check(request)
                 .then((response) => {
                     commit('setResponse', response.data)
-                }).catch(({response}) =>
-                {
-
-                })
+                }).catch(({response}) => {})
         }
     },
     getters: {
         getResponse: state => {
             return state.response
+        },
+        getRawRequest: state => {
+            return state.request
         }
     }
 }

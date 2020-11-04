@@ -40,11 +40,8 @@ export default {
   },
   methods: {
     loginOnClick () {
-      if (this.user.email.length > 0 &&
-         this.user.password.length > 0
-      ) {
-        store
-          .dispatch('authenticateUser', this.user)
+      if (this.user.email.length > 0 && this.user.password.length > 0) {
+        store.dispatch('authenticateUser', this.user)
           .then((isLoggedIn) => {
             if (isLoggedIn) {
               this.loginWasOk = true

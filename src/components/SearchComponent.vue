@@ -75,12 +75,18 @@ export default {
         adults: 1,
         children: 0
       },
-      data: {},
       menu1: false,
       score: '',
       selected: [],
       closeOnClick: false,
       dates: []
+    }
+  },
+  watch:{
+    dates: function () {
+      this.request.from = this.dates[0]
+      this.request.to = this.dates[1]
+      this.$store.commit('searchModule/setRequest',this.request)
     }
   },
   computed: {
@@ -91,7 +97,7 @@ export default {
       return `Adults ${this.request.adults} Children ${this.request.children}`
     },
     dateRangeText () {
-      return this.dates.length>1?`${helpers.utcDates(this.dates[0])} - ${helpers.utcDates(this.dates[1])}`:`Check-in - Check-out`
+       return this.dates.length>1?`${helpers.utcDates(this.dates[0])} - ${helpers.utcDates(this.dates[1])}`:`Check-in - Check-out`
     },
     minCheckIn () {
       return helpers.minCheckIn(Date.now())

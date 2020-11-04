@@ -41,8 +41,7 @@ export default {
     }
   },
   beforeMount () {
-    // this.getPolicies()
-  },
+   },
   created () {
     this.$store.dispatch('policyModule/loadData', this.$route.params.id)
   },

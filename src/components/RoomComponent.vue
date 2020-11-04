@@ -26,7 +26,6 @@
   </v-col>
 </v-container>
 </template>
-
 <script>
 export default {
   name: 'RoomComponent',

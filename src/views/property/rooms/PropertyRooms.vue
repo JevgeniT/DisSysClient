@@ -4,20 +4,9 @@
       <v-col cols="12">
           <v-expansion-panels >
             <v-expansion-panel>
-              <v-expansion-panel-header >
-                <template v-slot:default="{ open }">
-                  <v-row >
-                    <v-btn class="mx-2" fab dark color="indigo" small>
-                      <v-icon dark>mdi-plus</v-icon>
-                    </v-btn>
-                    <v-col
-                        cols="8"
-                        class="text--secondary">
-                      <v-fade-transition leave-absolute>
-                       <span v-if="open"></span>
-                      </v-fade-transition>
-                    </v-col>
-                  </v-row>
+              <v-expansion-panel-header disable-icon-rotate>
+                <template v-slot:actions>
+                    <v-icon color="blue" large>mdi-plus</v-icon>
                 </template>
               </v-expansion-panel-header>
               <v-expansion-panel-content >
@@ -53,10 +42,7 @@
                                   label="Adults occupancy"
                     ></v-text-field>
                   </v-col>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                  >
+                  <v-col cols="12" sm="6">
                     <v-text-field v-model.number="room.childOccupancy"
                                   label="Child occupancy"
                     ></v-text-field>
@@ -66,9 +52,16 @@
                                   label="Description"
                     ></v-text-field>
                   </v-col>
-                  <v-btn text color="primary" outlined @click="createRoom">
-                    Save
-                  </v-btn>
+                  <v-row dense>
+                    <v-col cols="2" v-for="f in facilities" v-bind:key="f.id">
+                      <v-checkbox
+                          v-model="room.facilityDtos"
+                          :label="f.name"
+                          :value="f"
+                      ></v-checkbox>
+                    </v-col>
+                  </v-row>
+                  <v-btn text color="primary" outlined @click="createRoom">Save</v-btn>
                 </v-row>
               </v-expansion-panel-content>
             </v-expansion-panel>
@@ -88,7 +81,10 @@ export default {
   data () {
     return {
       rooms: {},
-      room: {},
+      room: {
+        facilityDtos : []
+      },
+      facilities: {},
       isOk: '',
       property: null,
       bed: ['Large', 'Single']
@@ -96,19 +92,23 @@ export default {
   },
   beforeMount () {
     this.getRooms()
+    this.getFacilities()
   },
   methods: {
     async getRooms () {
-      return this.$api.property.byId(this.$route.params.id).then((r) => { this.rooms = r.data.propertyRooms })
+      return await this.$api.property.byId(this.$route.params.id).then((r) => { this.rooms = r.data.propertyRooms })
     },
     async createRoom () {
       this.room.propertyId = this.$route.params.id
-      return this.$api.rooms.post(JSON.stringify(this.room)).then((r) => {
+      return await this.$api.rooms.post(JSON.stringify(this.room)).then((r) => {
         if (r.status === 201) {
           this.rooms.push(r.data)
           this.room = {}
         }
       })
+    },
+    async getFacilities() {
+      return await this.$api.facilities.all().then((r)=> {this.facilities = r.data});
     }
   }
 }

@@ -1,62 +1,74 @@
 <template>
     <div class="container-fluid" data-app>
-        <div class="row">
-            <div class="col-md-1">
-            </div>
-            <div class="col-md-10">
-                <div class="row">
-                    <div class="col-md-8">
-                        <h3>
-                            <div class="text-left">
-                                <v-chip
-                                        class="ma-2"
-                                        secondary
-                                >
-                                  {{ property.type }}
-                                </v-chip>
-                              {{ property.name }}
-                              <v-subheader> <i class="fas fa-map-marker-alt"></i>
-                                {{ property.address }}, {{ property.country }}</v-subheader>
-                            </div>
-                        </h3>
-                      <h3>
-                        About
-                      </h3>
-                      <blockquote class="blockquote">
-                        <p class="mb-0">
-                          {{property.description}}
-                        </p>
-                      </blockquote>
-                        <h3>
-                            h3. Lorem ipsum dolor sit amet.
-                        </h3>
-                        <ol>
-                            <li class="list-item">
-                                Lorem ipsum dolor sit amet
-                            </li>
-                        </ol>
-                    </div>
-                    <div class="col-md-4">
-                        <v-chip
-                                class="ma-2"
-                                color="primary"
-                        >
-                            10
-                        </v-chip>
-                        <p v-for="i in reviews" v-bind:key="i.id">
-                            {{i.comment}}
-                            <v-divider></v-divider>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-1">
-            </div>
-        </div>
         <v-container >
-          <search-component>
+          <v-row>
+            <v-col md="12">
+              <div class="text-left text-h4">
+                <v-chip color="green" outlined>
+                  {{ property.type }}
+                </v-chip>
+                  {{ property.name }}
+                <v-subheader>
+                  <v-icon color="red">mdi-star</v-icon>
+                  <b>{{property.score}}</b>({{property.reviewsCount}})
+                  <i class="fas fa-map-marker-alt" style="margin-left: 10px"></i>
+                  <span style="font-size: 16px">
+                     {{ property.address }}, {{ property.country }}
+                   </span>
+                </v-subheader>
+              </div>
+              <v-row >
+                <v-col lg="6" >
+                  <v-img src="https://via.placeholder.com/450x350"></v-img>
+                </v-col>
+                <v-col lg="3" md="6">
+                  <v-row style="padding: 2px" >
+                    <v-img src="https://via.placeholder.com/274x199"></v-img>
+                    <v-img src="https://via.placeholder.com/274x199"></v-img>
+                  </v-row>
+                </v-col>
+                <v-col lg="3" md="6">
+                  <v-row style="padding: 2px 2px" align-content="space-around">
+                    <v-img src="https://via.placeholder.com/274x199"></v-img>
+                    <v-img src="https://via.placeholder.com/274x199"></v-img>
+                  </v-row>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+              <h5>About</h5>
+              {{property.description}}
+              <v-divider></v-divider>
+              <h5>
+                <v-icon color="red">mdi-star</v-icon>
+                <b>{{property.score}}</b>({{property.reviewsCount}} Review(s))
+              </h5>
+              <v-row dense>
+                <v-col v-for="(r, i) in reviews" :key="r.id" cols="4" >
+                  <v-card >
+                    <v-card-title class="mt-8">
+                      <v-avatar size="36" color="grey">
+                      </v-avatar>
+                      <p class="m-2">{{r.userName}}</p>
+                    </v-card-title>
+                    <v-card-subtitle>{{r.createdAt}}</v-card-subtitle>
+                    <v-card-text>
+                      <p v-if="!readMore && r.comment.length>80">{{r.comment.slice(0,65)}}
+                       <a @click.self="SetReadMore">
+                         more...
+                       </a>
+                      </p>
+                      <p v-else>{{r.comment}}</p>
+                    </v-card-text>
+                  </v-card>
+                </v-col>
+              </v-row>
+              <v-divider></v-divider>
+            </v-col>
+          </v-row>
+          <search-component >
             <v-col style="padding-top: 2%">
-                <v-btn v-on:click="getDates"> Submit</v-btn>
+                <v-btn @click="getDates"> Submit</v-btn>
+                <v-btn v-if="roomDtos.length" @click="submitReservation" text color="green" outlined>Submit</v-btn>
             </v-col>
           </search-component>
         </v-container>
@@ -69,7 +81,7 @@
              <v-card-text>
                <v-card-title class="headline">{{room.name}}</v-card-title>
                 <v-list v-if="room.dates">
-                  <v-list-item-group  v-model="reservation.roomDtos[x]">
+                  <v-list-item-group  v-model="roomDtos[x]">
                    <template v-for="(item, i) in room.policy">
                      <v-divider
                          v-if="!item"
@@ -82,7 +94,9 @@
                          active-class="deep-purple--text text--accent-4">
                        <template v-slot:default="{ active }">
                          <v-list-item-content>
-                           <v-list-item-title >{{roomPrice(room.dates.pricePerNightForAdult, room.dates.pricePerNightForChild, room.policy[i].priceCoefficient)}}</v-list-item-title>
+                           <v-list-item-title >
+                             {{roomPrice(room.dates.pricePerNightForAdult, room.dates.pricePerNightForChild, room.policy[i].priceCoefficient)}}
+                           </v-list-item-title>
                            <v-list-item-subtitle v-text="item.name">random text </v-list-item-subtitle>
                          </v-list-item-content>
                          <v-list-item-action>
@@ -97,47 +111,38 @@
                  </v-list-item-group>
                 </v-list>
             </v-card-text>
-            <v-card-actions>
-              <v-btn @click="submitReservation">Submit</v-btn>
-            </v-card-actions>
           </div>
         </v-card>
       </v-col>
     </div>
 </template>
 <script>
-import helpers from "@/services/helpers";
 import SearchComponent from "@/components/SearchComponent";
+import {Reservation} from '@/types/Reservation';
+import currency from 'currency.js'
 
 export default {
   name: 'App',
   components: {SearchComponent},
   data: () => ({
-    reservation: { roomDtos: []},
+    reservation: new Reservation({}),
+    roomDtos: [],
+    readMore: false,
     menu1: false,
-    modal: false,
     menu2: false,
     property: {
       propertyRooms:{}
     },
-    request: SearchComponent.data,
-    // dates: [],
+    request: {},
     days: null,
     reviews: null,
-    dialog: false,
-    pId: null,
+    pId: null
   }),
   computed: {
-    minCheckIn () {return helpers.minCheckIn(Date.now())},
-    minCheckOut () {
-      const dayOut = new Date(this.minCheckIn)
-      const endDate = new Date(dayOut.getFullYear(), dayOut.getMonth(), dayOut.getDate() + 3)
-      return endDate.toISOString().slice(0, 10)
-    }
   },
   beforeMount () {
     this.getProperty()
-    // this.GetReviews()
+    this.GetReviews()
   },
   methods: {
     async getProperty () {
@@ -145,38 +150,31 @@ export default {
       return await this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
     },
     async getDates (){
-
-      console.log(this.request())
+      this.request = this.$store.getters["searchModule/getRawRequest"];
       this.request.pId = this.$route.params.id
-      this.request.from = this.dates[0]
-      this.request.to  = this.dates[1]
       this.days = (new Date(this.request.to).getDate() - new Date(this.request.from).getDate())
       return await this.$api.dates.check(this.request).then((r) => {
         if (r.status === 200) {
-         this.$api.policies.all({ pId: this.pId }).then((r1) => {
+           this.$api.policies.all({ pId: this.pId }).then((r1) => {
             this.property.propertyRooms.forEach(x=>{
               x.policy  = r1.data
               x.dates = r.data.find(a => a.roomId === x.id)
              })
           })
-          this.$forceUpdate() // TODO
+          this.$forceUpdate()
         }
       })
     },
     async GetReviews () {
       const pId = this.$route.params.id
-      return this.$api.review.all(pId).then((r) => { this.reviews = r.data })
+      return this.$api.review.all({pId: pId}).then((r) => {this.reviews = r.data})
     },
-    async submitReservation () {
-      this.reservation.propertyId = this.$route.params.id
-      this.reservation.checkInDate = this.search.from
-      this.reservation.checkOutDate = this.search.to
-      this.reservation.roomDtos = this.reservation.roomDtos.filter(r=> r !== null)
-      this.reservation.adults = Number(this.search.adults)
-      this.reservation.children = Number(this.search.children)
+    async submitReservation () { // todo
+      this.reservation = new Reservation(this.request)
+      this.reservation.roomDtos = this.roomDtos.filter(r=> r !== null)
        this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
-        if (r.status === 200) {
-          console.log('ok')
+        if (r.status === 201) {
+          this.$router.push('/reservation/'+r.data.id)
         }
       })
     },
@@ -187,8 +185,11 @@ export default {
       return {roomId: rId, policyId: pId, roomTotalPrice: this.roomPrice(a,0,c)}
     },
     roomPrice(adultPrice, childPrice, coeff) {
-      const days = new Date(this.search.to).getDate() - new Date(this.search.from).getDate()
-      return (days *( adultPrice * this.search.adults + this.search.children * childPrice))  * coeff
+      const days = new Date(this.request.to).getDate() - new Date(this.request.from).getDate()
+      return currency((days *( adultPrice * this.request.adults + this.request.children * childPrice))  * coeff)
+     },
+    SetReadMore(){
+      this.readMore = true;
     }
   }
 }

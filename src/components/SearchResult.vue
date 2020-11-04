@@ -2,7 +2,7 @@
     <v-container fluid>
         <search-component>
           <v-col cols="12" sm="6" md="3">
-              <v-text-field prepend-icon="mdi-map-marker" v-model="request.input" label="Destination" required></v-text-field>
+              <v-text-field prepend-icon="mdi-map-marker" v-model="input" label="Destination" required></v-text-field>
           </v-col>
           <v-col style="padding-top: 2%">
               <v-btn type="submit" id="submit" v-on:click="searchRequest">Submit</v-btn>
@@ -39,9 +39,10 @@
                    <v-row dense class="card-row">
                     <v-list-item-content>
                        <v-list-item-title class="headline mb-2">
-                               <v-chip color="green" outlined small>{{d.type}}</v-chip><h4 style="display: inline; padding-left: 4px">{{d.name}}</h4>
+                         <v-chip color="green" outlined small>{{d.type}}</v-chip><h4 style="display: inline; padding-left: 4px"><router-link :to="{name:'propertyInfo', params:{id: d.id}}">{{d.name}}</router-link></h4>
                        </v-list-item-title>
-                       <v-list-item-subtitle> {{d.country}}, {{d.address}} </v-list-item-subtitle>
+                       <v-list-item-subtitle>
+                         <v-icon>mdi-map-marker</v-icon> {{d.country}}, {{d.address}}</v-list-item-subtitle>
                    </v-list-item-content>
                       <v-col justify="end">
                           <v-row justify="end" align="center" v-if="d.score>0">
@@ -50,9 +51,6 @@
                                   <h6>{{getScore(d.score)}}</h6>
                                   <p style="color: #a0a5b1">{{d.reviewsCount}} reviews</p>
                               </div>
-                          </v-row>
-                          <v-row justify="end">
-                              <v-btn text id="checkbutton" color="primary" outlined :to="{name:'propertyInfo', params:{id: d.id}}">Check</v-btn>
                           </v-row>
                       </v-col>
                    </v-row>
@@ -74,13 +72,9 @@ export default {
   components: {SearchComponent},
   data () {
     return {
-      request: {
-        adults: 1,
-        children: 0
-      },
       score: '',
       selected: [],
-      dates: []
+      input: ''
     }
   },
   computed: {
@@ -88,14 +82,14 @@ export default {
       response : state =>  state.searchModule.response
     }),
     filtered: function () {
-         return !this.selected.length ? this.response : this.response.filter(p => this.selected.includes(p.type || p.score))
+         return !this.selected.length ? this.response :  this.response.filter(p => this.selected.includes(p.type || p.score))
      },
   },
   methods: {
     async searchRequest () {
-      this.request.from = this.dates[0]
-      this.request.to  = this.dates[1]
-      return await this.$store.dispatch('searchModule/findProperties',this.request)
+      const request = this.$store.getters["searchModule/getRawRequest"]
+      request.input  = this.input
+      return await this.$store.dispatch('searchModule/findProperties', request)
     },
     getScore (value) {
       const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])
@@ -114,7 +108,7 @@ export default {
         float: left;
         margin-right: 1rem;
         margin-bottom: 5px;
-        background: #76a7d7;
+        background: #5597e2;
         color: #fff;
         font-family: 'Helvetica', 'Arial', sans-serif;
         font-size: 1.5em;
