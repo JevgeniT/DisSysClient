@@ -11,9 +11,15 @@
       <v-btn @click="postExtra" text outlined color="blue">Create</v-btn>
     </v-col>
   </v-row>
-  <v-row>
-    <p v-for="e in extras" v-bind:key="e.id">{{e}}</p>
-  </v-row>
+  <v-divider></v-divider>
+  <v-row justify="center">
+    <v-list flat>
+      <v-list-item-group>
+        <v-list-item v-for="e in extras" v-bind:key="e.id">{{e}}</v-list-item>
+      </v-list-item-group>
+    </v-list>
+
+   </v-row>
 </v-container>
 </template>
 

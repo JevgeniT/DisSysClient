@@ -17,23 +17,29 @@
                    </span>
                 </v-subheader>
               </div>
-              <v-row >
-                <v-col lg="6" >
-                  <v-img src="https://via.placeholder.com/450x350"></v-img>
+              <v-container>
+              <v-row>
+                <v-col md="6">
+                  <v-img src="https://via.placeholder.com/455x350"></v-img>
                 </v-col>
-                <v-col lg="3" md="6">
-                  <v-row style="padding: 2px" >
-                    <v-img src="https://via.placeholder.com/274x199"></v-img>
-                    <v-img src="https://via.placeholder.com/274x199"></v-img>
-                  </v-row>
-                </v-col>
-                <v-col lg="3" md="6">
-                  <v-row style="padding: 2px 2px" align-content="space-around">
-                    <v-img src="https://via.placeholder.com/274x199"></v-img>
-                    <v-img src="https://via.placeholder.com/274x199"></v-img>
+                <v-col md="6">
+                  <v-row dense>
+                    <v-col  cols="6">
+                      <v-img src="https://via.placeholder.com/274x199"></v-img>
+                    </v-col>
+                    <v-col  cols="6">
+                      <v-img src="https://via.placeholder.com/274x199"></v-img>
+                    </v-col>
+                    <v-col  cols="6">
+                      <v-img src="https://via.placeholder.com/274x199"></v-img>
+                    </v-col>
+                    <v-col  cols="6">
+                      <v-img src="https://via.placeholder.com/274x199"></v-img>
+                    </v-col>
                   </v-row>
                 </v-col>
               </v-row>
+              </v-container>
               <v-divider></v-divider>
               <h5>About</h5>
               {{property.description}}
@@ -65,7 +71,7 @@
               <v-divider></v-divider>
             </v-col>
           </v-row>
-          <search-component >
+          <search-component>
             <v-col style="padding-top: 2%">
                 <v-btn @click="getDates"> Submit</v-btn>
                 <v-btn v-if="roomDtos.length" @click="submitReservation" text color="green" outlined>Submit</v-btn>
@@ -114,6 +120,106 @@
           </div>
         </v-card>
       </v-col>
+    <v-col>
+      <v-card>
+        <v-card-title>House Rules</v-card-title>
+        <v-card-text>
+          <v-list disabled>
+            <v-list-item-group>
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-calendar</v-icon>Check-in
+                </v-list-item-icon>
+                <v-col cols="4">
+                  <v-progress-linear
+                      color="light-blue"
+                      height="20"
+                      :value="property.propertyRules.checkInFrom"
+                      rounded
+                      striped
+                  ></v-progress-linear>
+                </v-col>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <v-icon>mdi-calendar</v-icon>Check-out
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-col cols="4">
+                    <v-progress-linear
+                        color="light-blue"
+                        height="20"
+                        :value="5"
+                        rounded
+                        striped
+                    ></v-progress-linear>
+                  </v-col>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <span>
+                    <v-icon>mdi-paw</v-icon>
+                    Pets
+                  </span>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-row justify="center">
+                    <v-col sm="8">
+                      {{property.propertyRules.allowPets?' Pets are allowed':' Pets are not allowed'}}
+
+                    </v-col>
+                   </v-row>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <span>
+                    <v-icon>mdi-account</v-icon>
+                    Age restriction
+                  </span>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <span>
+                    <v-icon>mdi-party-popper</v-icon>
+                    Parties
+                  </span>
+                </v-list-item-icon>
+                <v-list-item-content></v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <span>
+                    <v-icon>mdi-lock</v-icon>
+                    Damage deposit
+                  </span>
+                </v-list-item-icon>
+                <v-list-item-content></v-list-item-content>
+              </v-list-item>
+              <v-list-item>
+                <v-list-item-icon>
+                  <span>
+                    <v-icon>mdi-credit-card</v-icon>
+                    Payment methods accepted
+                  </span>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-row justify="">
+                    <v-col sm="8">
+                      {{property.propertyRules.paymentMethodsAccepted}}
+                    </v-col>
+                  </v-row>
+
+                </v-list-item-content>
+              </v-list-item>
+            </v-list-item-group>
+          </v-list>
+        </v-card-text>
+      </v-card>
+
+    </v-col>
     </div>
 </template>
 <script>
@@ -128,18 +234,14 @@ export default {
     reservation: new Reservation({}),
     roomDtos: [],
     readMore: false,
-    menu1: false,
-    menu2: false,
     property: {
-      propertyRooms:{}
+      propertyRooms:[]
     },
     request: {},
     days: null,
     reviews: null,
     pId: null
   }),
-  computed: {
-  },
   beforeMount () {
     this.getProperty()
     this.GetReviews()
@@ -154,14 +256,15 @@ export default {
       this.request.pId = this.$route.params.id
       this.days = (new Date(this.request.to).getDate() - new Date(this.request.from).getDate())
       return await this.$api.dates.check(this.request).then((r) => {
+
         if (r.status === 200) {
            this.$api.policies.all({ pId: this.pId }).then((r1) => {
             this.property.propertyRooms.forEach(x=>{
               x.policy  = r1.data
               x.dates = r.data.find(a => a.roomId === x.id)
-             })
+              })
+             this.$forceUpdate()
           })
-          this.$forceUpdate()
         }
       })
     },
