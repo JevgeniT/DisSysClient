@@ -5,6 +5,13 @@ export class Reservation{
         this.CheckOutdate = object.CheckOutdate || object.to;
         this.adults = object.adults;
         this.children = object.children;
-        this.roomDtos = object.roomDtos || [];
+        this.roomDtos = this.filterRooms(object.roomDtos)
+    }
+
+    filterRooms(rooms){
+        if (rooms != null) {
+            return rooms.filter(r=> r !== null) || [].filter(r=> r !== null)
+        }
+        return []
     }
 }

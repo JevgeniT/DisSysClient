@@ -121,104 +121,142 @@
         </v-card>
       </v-col>
     <v-col>
-      <v-card>
+      <v-card v-if="property.propertyRules">
         <v-card-title>House Rules</v-card-title>
         <v-card-text>
-          <v-list disabled>
+          <v-list >
             <v-list-item-group>
               <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-calendar</v-icon>Check-in
-                </v-list-item-icon>
-                <v-col cols="4">
+                <v-col cols="2">
+                  <v-list-item-icon>
+                    <v-icon>mdi-calendar</v-icon>Check-in
+                  </v-list-item-icon>
+                </v-col>
+                <v-col cols="4" offset-sm="1">
+<!--                  <v-tooltip right>-->
+<!--                    <template v-slot:activator="{ attrs }">-->
+<!--                      <v-btn-->
+<!--                          color="primary"-->
+<!--                          outlined-->
+<!--                          dark-->
+<!--                          x-small-->
+<!--                          v-bind="attrs"-->
+<!--                      >-->
+<!--                        From {{property.propertyRules.checkInFrom}}-->
+<!--                      </v-btn>-->
+<!--                    </template>-->
+<!--                  </v-tooltip>-->
+                   <v-progress-linear
+                      color="light-blue"
+                      height="20"
+                      :value="40"
+                      rounded
+                      striped
+                      reverse
+                  ></v-progress-linear>
+                 </v-col>
+              </v-list-item>
+              <v-list-item>
+                <v-col cols="2">
+                  <v-list-item-icon>
+                    <v-icon>mdi-calendar</v-icon>Check-out
+                  </v-list-item-icon>
+                </v-col>
+                <v-col cols="4" offset-sm="1">
+
                   <v-progress-linear
                       color="light-blue"
                       height="20"
-                      :value="property.propertyRules.checkInFrom"
+                      :value="40"
                       rounded
                       striped
                   ></v-progress-linear>
                 </v-col>
               </v-list-item>
+
               <v-list-item>
-                <v-list-item-icon>
-                  <v-icon>mdi-calendar</v-icon>Check-out
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-col cols="4">
-                    <v-progress-linear
-                        color="light-blue"
-                        height="20"
-                        :value="5"
-                        rounded
-                        striped
-                    ></v-progress-linear>
-                  </v-col>
-                </v-list-item-content>
-              </v-list-item>
-              <v-list-item>
-                <v-list-item-icon>
+                <v-col md="3">
+                  <v-list-item-icon>
                   <span>
                     <v-icon>mdi-paw</v-icon>
                     Pets
                   </span>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-row justify="center">
-                    <v-col sm="8">
-                      {{property.propertyRules.allowPets?' Pets are allowed':' Pets are not allowed'}}
-
-                    </v-col>
-                   </v-row>
-                </v-list-item-content>
+                  </v-list-item-icon>
+                </v-col>
+                <v-col md="11">
+                  <v-list-item-content>
+                    {{property.propertyRules.allowPets?'Pets are allowed':'Pets are not allowed'}}
+                  </v-list-item-content>
+                </v-col>
               </v-list-item>
+
               <v-list-item>
-                <v-list-item-icon>
+                <v-col md="3">
+                  <v-list-item-icon>
                   <span>
                     <v-icon>mdi-account</v-icon>
                     Age restriction
                   </span>
-                </v-list-item-icon>
+                  </v-list-item-icon>
+                </v-col>
+               <v-col md="9">
+                 <v-list-item-content >
+                   {{property.propertyRules.checkInAge>0?'':'There\'\s no age requirement for check-in'}}
+                 </v-list-item-content>
+               </v-col>
               </v-list-item>
+
               <v-list-item>
-                <v-list-item-icon>
+                <v-col md="3">
+                  <v-list-item-icon>
                   <span>
                     <v-icon>mdi-party-popper</v-icon>
                     Parties
                   </span>
-                </v-list-item-icon>
-                <v-list-item-content></v-list-item-content>
+                  </v-list-item-icon>
+                </v-col>
+               <v-col md="10">
+                 <v-list-item-content>
+                   {{property.propertyRules.allowParties?'Parties are allowed':'Parties/events are not allowed'}}
+                 </v-list-item-content>
+               </v-col>
               </v-list-item>
               <v-list-item>
-                <v-list-item-icon>
+                <v-col cols="3">
+                  <v-list-item-icon>
                   <span>
                     <v-icon>mdi-lock</v-icon>
                     Damage deposit
                   </span>
-                </v-list-item-icon>
-                <v-list-item-content></v-list-item-content>
+                  </v-list-item-icon>
+                </v-col>
+                <v-col cols="6">
+                  <v-list-item-content v-if="property.propertyRules.damageDepositReuqired">
+                    A damage deposit of {{property.propertyRules.damageDeposit}} is required on arrival.You should be reimbursed on check-out.
+                    Your deposit will be refunded in full, in cash, subject to an inspection of the property.
+                  </v-list-item-content>
+                  <v-list-item-content v-else>
+                    No damage deposit required
+                  </v-list-item-content>
+                </v-col>
               </v-list-item>
               <v-list-item>
-                <v-list-item-icon>
-                  <span>
+                <v-col cols="3">
+                  <v-list-item-icon>
                     <v-icon>mdi-credit-card</v-icon>
                     Payment methods accepted
-                  </span>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-row justify="">
-                    <v-col sm="8">
-                      {{property.propertyRules.paymentMethodsAccepted}}
-                    </v-col>
-                  </v-row>
-
-                </v-list-item-content>
+                  </v-list-item-icon>
+                </v-col>
+                <v-col cols="5">
+                  <v-list-item-content>
+                          {{property.propertyRules.paymentMethodsAccepted}}
+                   </v-list-item-content>
+                </v-col>
               </v-list-item>
             </v-list-item-group>
           </v-list>
         </v-card-text>
       </v-card>
-
     </v-col>
     </div>
 </template>
@@ -249,14 +287,14 @@ export default {
   methods: {
     async getProperty () {
       this.pId = this.$route.params.id
-      return await this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
+      return this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
     },
     async getDates (){
       this.request = this.$store.getters["searchModule/getRawRequest"];
       this.request.pId = this.$route.params.id
       this.days = (new Date(this.request.to).getDate() - new Date(this.request.from).getDate())
-      return await this.$api.dates.check(this.request).then((r) => {
 
+      return await this.$api.dates.check(this.request).then((r) => {
         if (r.status === 200) {
            this.$api.policies.all({ pId: this.pId }).then((r1) => {
             this.property.propertyRooms.forEach(x=>{
@@ -270,12 +308,12 @@ export default {
     },
     async GetReviews () {
       const pId = this.$route.params.id
-      return this.$api.review.all({pId: pId}).then((r) => {this.reviews = r.data})
+      return await this.$api.review.all({pId: pId}).then((r) => {this.reviews = r.data})
     },
     async submitReservation () { // todo
       this.reservation = new Reservation(this.request)
       this.reservation.roomDtos = this.roomDtos.filter(r=> r !== null)
-       this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
+      await this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
         if (r.status === 201) {
           this.$router.push('/reservation/'+r.data.id)
         }
