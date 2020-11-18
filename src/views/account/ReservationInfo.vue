@@ -78,6 +78,7 @@ export default {
   },
   computed:mapState({
     reservation: state => state.reservationModule.reservation,
+
     inPast(){
      return new Date(this.reservation.checkOutDate) < new Date(Date.now())
     }

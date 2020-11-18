@@ -78,7 +78,7 @@ export default {
   },
   methods: {
     async getProperty () {
-      return this.$api.property.all().then((r) => { this.properties = r.data })
+      return await this.$api.property.all().then((r) => { this.properties = r.data })
     },
     async createProperty () {
       return await this.$api.property.post(JSON.stringify(this.property)).then((r) => {

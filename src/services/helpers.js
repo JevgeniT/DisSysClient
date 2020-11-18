@@ -23,5 +23,9 @@ export default{
             return this.utcDates(f).slice(0,10) + ' - ' + this.utcDates(t)
         }
         return this.utcDates(f) + '-' + this.utcDates(t)
+    },
+    getScore (value) {
+        const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])
+        return scoreMap.get(Math.round(value))
     }
 }

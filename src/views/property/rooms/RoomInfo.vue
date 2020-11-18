@@ -38,7 +38,7 @@ export default {
   },
   methods: {
     async getRoom () {
-      await this.$api.rooms.byId(this.$route.params.id).then((r) => {
+     return await this.$api.rooms.byId(this.$route.params.id).then((r) => {
         this.room = r.data
       })
     }

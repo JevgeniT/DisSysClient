@@ -31,7 +31,7 @@
                       cols="12"
                       sm="6"
                   >
-                    <v-select label="Bed Type" :items="bed" v-model="room.bed">
+                    <v-select label="Bed Type" :items="bed" v-model="room.bedTypes" multiple>
                     </v-select>
                   </v-col>
                   <v-col
@@ -68,7 +68,7 @@
           </v-expansion-panels>
          <v-divider></v-divider>
       </v-col>
-      <room-component :rooms="rooms" :owner="true">
+      <room-component :rooms="rooms">
       </room-component>
     </v-row>
   </v-container>
@@ -87,7 +87,7 @@ export default {
       facilities: {},
       isOk: '',
       property: null,
-      bed: ['Large', 'Single']
+      bed: ['1 king bed', '1 queen bed', '2 twin beds']
     }
   },
   beforeMount () {

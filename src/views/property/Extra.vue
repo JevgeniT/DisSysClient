@@ -18,7 +18,6 @@
         <v-list-item v-for="e in extras" v-bind:key="e.id">{{e}}</v-list-item>
       </v-list-item-group>
     </v-list>
-
    </v-row>
 </v-container>
 </template>

@@ -23,6 +23,7 @@
           label="Payment methods accepted"
           :items="payment"
           v-model="rules.paymentMethodsAccepted"
+          multiple
       >
       </v-select>
     </v-col>
@@ -50,9 +51,11 @@ export default {
 name: "PropertyRules",
   data() {
     return {
-      rules: {},
+      rules: {
+        paymentMethodsAccepted: []
+      },
       payment: ['Cash','Visa','MasterCard']
-    }
+    } 
   },
   beforeMount (){
     this.getRules();

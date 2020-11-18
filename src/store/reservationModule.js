@@ -21,7 +21,7 @@ export const reservationModule = {
     },
     getters: {
         getReservation: state => {
-            return state.reservation
+            return state.reservation || {}
         }
     }
 }

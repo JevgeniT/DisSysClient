@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <search-component>
+         <search-component>
           <v-col cols="12" sm="6" md="3">
               <v-text-field prepend-icon="mdi-map-marker" v-model="input" label="Destination" required></v-text-field>
           </v-col>
@@ -25,13 +25,15 @@
                     </v-card-text>
                 </v-card>
            </v-col>
-           <v-col md="10">
-           <v-card v-if="response.notFound">
+           <v-col md="12" v-if="response.notFound">
+           <v-card>
                <v-list-item-content style="text-align: center">
                    <p>Sorry, nothing has been found</p>
                </v-list-item-content>
            </v-card>
-           <v-card v-else v-for="d in filtered"  v-bind:key="d.id" class="mx-auto" outlined style="margin-bottom: 5px">
+           </v-col>
+           <v-col v-else>
+           <v-card v-for="d in filtered"  v-bind:key="d.id" class="mx-auto" outlined style="margin-bottom: 5px">
                <v-list-item three-line>
                <v-list-item-avatar tile size="150" color="grey">
                    <v-img src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"></v-img>
@@ -41,10 +43,17 @@
                        <v-list-item-title class="headline mb-2">
                          <v-chip color="green" outlined small>{{d.type}}</v-chip><h4 style="display: inline; padding-left: 4px"><router-link :to="{name:'propertyInfo', params:{id: d.id}}">{{d.name}}</router-link></h4>
                        </v-list-item-title>
-                       <v-list-item-subtitle>
-                         <v-icon>mdi-map-marker</v-icon> {{d.country}}, {{d.address}}</v-list-item-subtitle>
+                       <v-list-item-subtitle><v-icon>mdi-map-marker</v-icon> {{d.country}}, {{d.address}}</v-list-item-subtitle>
+                         <v-col justify="start" v-if="d.room">
+
+                             <b>{{d.room.name}}</b>
+                             <div class="pull-right" style="word-wrap: break-word;">
+                               {{d.room.price}}
+                               <span style="font-size: 10px" >1 day</span>
+                             </div>
+                         </v-col>
                    </v-list-item-content>
-                      <v-col justify="end">
+                      <v-col justify="end" v-if="d.score>0">
                           <v-row justify="end" align="center" v-if="d.score>0">
                               <div class="scoreBox">{{d.score}}</div>
                               <div style="line-height: 70%">
@@ -83,17 +92,13 @@ export default {
     }),
     filtered: function () {
          return !this.selected.length ? this.response :  this.response.filter(p => this.selected.includes(p.type || p.score))
-     },
+     }
   },
   methods: {
     async searchRequest () {
       const request = this.$store.getters["searchModule/getRawRequest"]
       request.input  = this.input
       return await this.$store.dispatch('searchModule/findProperties', request)
-    },
-    getScore (value) {
-      const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])
-      return scoreMap.get(Math.round(value))
     }
   }
 }
@@ -118,4 +123,5 @@ export default {
         height: 40px;
         border-radius: 5px;
     }
+
 </style>

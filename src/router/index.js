@@ -12,6 +12,7 @@ import RoomInfo from '@/views/property/rooms/RoomInfo'
 import Dashboard from '@/views/account/Dashboard'
 import ReservationInfo from '@/views/account/ReservationInfo'
 import Review from '@/views/account/Review';
+import ReservationConfirmation from "@/views/ReservationConfirmation";
 
 Vue.use(VueRouter)
 export default new VueRouter({
@@ -27,6 +28,7 @@ export default new VueRouter({
     { path: '/room/:id', name: 'RoomInfo', component: RoomInfo, props: true },
     { path: '/dashboard', name: 'dashboard', component: Dashboard, props: true },
     { path: '/reservation/:id', name: 'reservationInfo', component: ReservationInfo, props: true },
+    { path: '/reservation/confirm', name: 'reservationConfirm', component: ReservationConfirmation, props: true},
     { path: '/review', name: 'review', component: Review, props: true }
   ]
 })

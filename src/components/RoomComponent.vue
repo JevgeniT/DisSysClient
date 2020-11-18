@@ -16,8 +16,7 @@
           <p>Size: {{room.size}} m2</p>
         </v-card-text>
         <v-card-actions>
-            <v-btn  v-if="owner"
-                color="primary" outlined text :to="{ name: 'RoomInfo', params: { id: room.id }}">Details</v-btn>
+            <v-btn color="primary" outlined text :to="{ name: 'RoomInfo', params: { id: room.id }}">Details</v-btn>
         </v-card-actions>
         <slot></slot>
       </div>

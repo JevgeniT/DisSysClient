@@ -71,12 +71,15 @@
               <v-divider></v-divider>
             </v-col>
           </v-row>
-          <search-component>
-            <v-col style="padding-top: 2%">
-                <v-btn @click="getDates"> Submit</v-btn>
-                <v-btn v-if="roomDtos.length" @click="submitReservation" text color="green" outlined>Submit</v-btn>
-            </v-col>
-          </search-component>
+          <div class="stick">
+            <search-component>
+              <v-col style="padding-top: 2%">
+                <v-btn @click="getDates" outlined text color="primary"> Submit</v-btn>
+                <router-link v-if="roomDtos.length" :to="{name: 'reservationConfirm'}" ><v-btn text color="primary" @click="passToConfirmation" outlined>Reserve</v-btn></router-link>
+              </v-col>
+            </search-component>
+          </div>
+
         </v-container>
       <v-col v-for="(room, x) in property.propertyRooms" v-bind:key="room.id">
         <v-card>
@@ -96,14 +99,14 @@
                      <v-list-item
                          v-else
                          :key="`item-${i}`"
-                         :value="setDto(room.id, room.policy[i].id)"
+                         :value="setDto(room, room.policy[i])"
                          active-class="deep-purple--text text--accent-4">
                        <template v-slot:default="{ active }">
                          <v-list-item-content>
                            <v-list-item-title >
                              {{roomPrice(room.dates.pricePerNightForAdult, room.dates.pricePerNightForChild, room.policy[i].priceCoefficient)}}
                            </v-list-item-title>
-                           <v-list-item-subtitle v-text="item.name">random text </v-list-item-subtitle>
+                           <v-list-item-subtitle v-text="item.name"> # placeholder </v-list-item-subtitle>
                          </v-list-item-content>
                          <v-list-item-action>
                            <v-checkbox
@@ -249,7 +252,7 @@
                 </v-col>
                 <v-col cols="5">
                   <v-list-item-content>
-                          {{property.propertyRules.paymentMethodsAccepted}}
+                          {{property.propertyRules.paymentMethodsAccepted.join(', ')}}
                    </v-list-item-content>
                 </v-col>
               </v-list-item>
@@ -262,14 +265,14 @@
 </template>
 <script>
 import SearchComponent from "@/components/SearchComponent";
-import {Reservation} from '@/types/Reservation';
+import {Reservation, ReservationDto} from '@/types/Reservation';
 import currency from 'currency.js'
 
 export default {
   name: 'App',
   components: {SearchComponent},
   data: () => ({
-    reservation: new Reservation({}),
+    reservation: {},
     roomDtos: [],
     readMore: false,
     property: {
@@ -287,7 +290,7 @@ export default {
   methods: {
     async getProperty () {
       this.pId = this.$route.params.id
-      return this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
+      return await this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
     },
     async getDates (){
       this.request = this.$store.getters["searchModule/getRawRequest"];
@@ -300,7 +303,7 @@ export default {
             this.property.propertyRooms.forEach(x=>{
               x.policy  = r1.data
               x.dates = r.data.find(a => a.roomId === x.id)
-              })
+            })
              this.$forceUpdate()
           })
         }
@@ -310,31 +313,35 @@ export default {
       const pId = this.$route.params.id
       return await this.$api.review.all({pId: pId}).then((r) => {this.reviews = r.data})
     },
-    async submitReservation () { // todo
-      this.reservation = new Reservation(this.request)
-      this.reservation.roomDtos = this.roomDtos.filter(r=> r !== null)
-      await this.$api.reservations.post(JSON.stringify(this.reservation)).then(r => {
-        if (r.status === 201) {
-          this.$router.push('/reservation/'+r.data.id)
-        }
-      })
-    },
-    setDto(rId, pId){
-      const found = this.property.propertyRooms.find(x=> x.id === rId && x.policy.find(p=> p.id === pId))
+    setDto(room, policy){
+      const found = this.property.propertyRooms.find(x=> x.id === room.id && x.policy.find(p=> p.id === policy.id))
       const a = found.dates.pricePerNightForAdult
-      const c = found.policy.filter(p=> p.id === pId)[0].priceCoefficient
-      return {roomId: rId, policyId: pId, roomTotalPrice: this.roomPrice(a,0,c)}
+      const ch = found.dates.pricePerNightForChild
+      const c = found.policy.filter(p=> p.id === policy.id)[0].priceCoefficient
+      return {room: room, policy: policy, roomTotalPrice : this.roomPrice(a, ch, c)}
     },
     roomPrice(adultPrice, childPrice, coeff) {
       const days = new Date(this.request.to).getDate() - new Date(this.request.from).getDate()
-      return currency((days *( adultPrice * this.request.adults + this.request.children * childPrice))  * coeff)
-     },
+      const totalPerNight = days *(adultPrice * this.request.adults + this.request.children * childPrice);
+      return currency((totalPerNight  * (coeff / 100)) + totalPerNight)
+    },
     SetReadMore(){
       this.readMore = true;
+    },
+    passToConfirmation(){
+      this.reservation = new ReservationDto(this.request)
+      this.reservation.property = this.property
+      this.reservation.roomDtos = this.roomDtos.filter(r=> r !== null)
+      this.$store.commit('reservationModule/setReservation', this.reservation)
     }
   }
 }
 </script>
 
 <style scoped>
+.stick {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 4rem;
+}
 </style>
