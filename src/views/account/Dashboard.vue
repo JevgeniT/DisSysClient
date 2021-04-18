@@ -12,7 +12,7 @@
                <v-card-text>
                  <v-card-title><router-link :to="{name: 'reservationInfo', params:{id: res.id}}">{{res.propertyName}}</router-link></v-card-title>
                  <v-card-subtitle>{{utcDates(res.checkInDate, res.checkOutDate)}}</v-card-subtitle>
-                 <v-card-text>{{res.active?'Active':'Inactive'}}</v-card-text>
+                 <v-card-text>{{res.status}}</v-card-text>
                </v-card-text>
              </v-col>
            </v-row>

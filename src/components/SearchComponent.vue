@@ -1,6 +1,6 @@
 <template>
   <v-card >
-    <v-row class="d-flex">
+     <v-row class="d-flex">
       <v-col md="4" style="margin-left: 10px">
         <v-menu
             v-model="menu1"
@@ -30,7 +30,6 @@
           </v-date-picker>
         </v-menu>
       </v-col>
-
       <v-col >
         <v-menu bottom offset-y :close-on-content-click="closeOnClick">
           <template v-slot:activator="{ on, attrs }">
@@ -60,8 +59,7 @@
       </v-col>
       <slot></slot>
     </v-row>
-  </v-card>
-
+   </v-card>
 </template>
 
 <script>

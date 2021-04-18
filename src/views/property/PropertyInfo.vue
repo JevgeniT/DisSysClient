@@ -3,7 +3,7 @@
      <v-card v-model="getProperty" >
        <v-img src="https://cdn.vuetifyjs.com/images/cards/house.jpg" height="200px"></v-img>
         <v-card-title>{{property.name}}</v-card-title>
-        <v-card-subtitle>{{property.country}}, {{property.address}}</v-card-subtitle>
+       <v-card-subtitle><v-icon small>mdi-map-marker</v-icon>{{property.country}}, {{property.address}}</v-card-subtitle>
         <v-card-text>
         </v-card-text>
     </v-card>

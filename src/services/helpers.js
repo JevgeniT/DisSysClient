@@ -1,10 +1,10 @@
 export default{
-    getDates(dayIn, dayOut) {
+    getTotalDays(dayIn, dayOut) {
         return new Date(dayOut).getDate() - new Date(dayIn).getDate();
     },
     minCheckIn(val) {
         const dayIn = new Date(val)
-        const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate())
+        const endDate = new Date(dayIn.getFullYear(), dayIn.getMonth(), dayIn.getDate()+1)
         return endDate.toISOString().slice(0, 10)
     },
     minCheckOut (val) {
@@ -27,5 +27,12 @@ export default{
     getScore (value) {
         const scoreMap = new Map([[6, 'Pleasant'], [7, 'Good'], [8, 'Very good'], [9, 'Wonderful']])
         return scoreMap.get(Math.round(value))
+    },
+    postfix(num, word) {
+        return num!==1?word+'s':word
+    },
+
+    postfix2(num, word) {
+        return num!==1?num+' '+ word+'s':num+' '+word
     }
 }

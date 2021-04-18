@@ -44,7 +44,8 @@ const dates = {
 const reservations = {
   all: params => api.get('/reservation', { params }),
   byId: params => api.get(`/reservation/${params}`,params),
-  post: params => api.post('/reservation', params, conf)
+  post: params => api.post('/reservation', params, conf),
+  put: (id,params) => api.put(`/reservation/${id}`, params)
 }
 const rooms = {
   all: params => api.get(`/room/${params}`, { params }),

@@ -9,18 +9,22 @@ export class Reservation{
         this.children = object.children;
         this.arrivalTime = object.arrivalTime;
         this.message  = object.message;
-        this.roomDtos = object.roomDtos.map(e=> {
-            let obj =  {
-                roomId: e.room.id,
-                policyId: e.policy.id,
-                roomTotalPrice : currency(e.roomTotalPrice),
-                guestFirstLastName: e.guestFirstLastName,
-                bedType: e.bedType
-            }
-            return obj;
-        })
+        this.reservationExtras = object.extras.map(e=>{return{extraId:e.id}}) || []
+        this.totalPrice = currency(object.totalPrice).value;
+        this.roomDtos = this.mapRoomDtos(object.roomDtos);
     }
 
+
+    mapRoomDtos(object) {
+       return object.map(e=> {
+            return {
+                roomId: e.room.id, policyId: e.policy.id,
+                roomTotalPrice: currency(e.roomTotalPrice).value,
+                guestFirstLastName: e.guestFirstLastName,
+                bedType: e.bedType
+            };
+        })
+    }
 }
 
 export class ReservationDto{ // for transferring between views
@@ -30,6 +34,8 @@ export class ReservationDto{ // for transferring between views
         this.checkOutDate = object.checkOutDate || object.to;
         this.adults = object.adults;
         this.children = object.children;
+        this.totalPrice = object.totalPrice || 0;
+        this.extras = []
         this.property = object.property
         this.roomDtos = this.filterRooms(object.roomDtos)
     }

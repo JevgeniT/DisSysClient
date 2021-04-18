@@ -2,12 +2,12 @@
     <v-container fluid>
          <search-component>
           <v-col cols="12" sm="6" md="3">
-              <v-text-field prepend-icon="mdi-map-marker" v-model="input" label="Destination" required></v-text-field>
+              <v-text-field prepend-icon="mdi-map-marker" v-model="input" label="Destination" ></v-text-field>
           </v-col>
           <v-col style="padding-top: 2%">
-              <v-btn type="submit" id="submit" v-on:click="searchRequest">Submit</v-btn>
+              <v-btn v-on:click="searchRequest" outlined  color="primary">Submit</v-btn>
           </v-col>
-        </search-component>
+         </search-component>
         <v-row>
         <v-col cols="12">
             <v-row>
@@ -45,7 +45,6 @@
                        </v-list-item-title>
                        <v-list-item-subtitle><v-icon>mdi-map-marker</v-icon> {{d.country}}, {{d.address}}</v-list-item-subtitle>
                          <v-col justify="start" v-if="d.room">
-
                              <b>{{d.room.name}}</b>
                              <div class="pull-right" style="word-wrap: break-word;">
                                {{d.room.price}}

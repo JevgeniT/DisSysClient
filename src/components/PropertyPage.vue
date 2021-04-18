@@ -46,7 +46,7 @@
               <v-divider></v-divider>
               <h5>
                 <v-icon color="red">mdi-star</v-icon>
-                <b>{{property.score}}</b>({{property.reviewsCount}} Review(s))
+                <b>{{property.score}}</b><span class="subtitle-2">({{postfix2(property.reviewsCount, 'Review')}})</span>
               </h5>
               <v-row dense>
                 <v-col v-for="(r, i) in reviews" :key="r.id" cols="4" >
@@ -88,37 +88,55 @@
               <v-img src="https://cdn.vuetifyjs.com/images/cards/house.jpg"></v-img>
             </v-avatar>
              <v-card-text>
-               <v-card-title class="headline">{{room.name}}</v-card-title>
-                <v-list v-if="room.dates">
-                  <v-list-item-group  v-model="roomDtos[x]">
-                   <template v-for="(item, i) in room.policy">
-                     <v-divider
-                         v-if="!item"
-                         :key="`divider-${i}`"
-                     ></v-divider>
-                     <v-list-item
-                         v-else
-                         :key="`item-${i}`"
-                         :value="setDto(room, room.policy[i])"
-                         active-class="deep-purple--text text--accent-4">
-                       <template v-slot:default="{ active }">
-                         <v-list-item-content>
-                           <v-list-item-title >
-                             {{roomPrice(room.dates.pricePerNightForAdult, room.dates.pricePerNightForChild, room.policy[i].priceCoefficient)}}
-                           </v-list-item-title>
-                           <v-list-item-subtitle v-text="item.name"> # placeholder </v-list-item-subtitle>
-                         </v-list-item-content>
-                         <v-list-item-action>
-                           <v-checkbox
-                               :input-value="active"
-                               color="deep-purple accent-4"
-                           ></v-checkbox>
-                         </v-list-item-action>
+               <v-row dense >
+                 <v-col cols="2">
+                   <h4>{{room.name}}</h4>
+
+                 </v-col>
+
+               </v-row>
+               <v-row dense>
+                 <v-col cols="2">
+                   <span style="color: green"><small>{{room.facilities.join(', ')}}</small></span>
+                 </v-col>
+                 <v-col>
+                   <v-list v-if="room.dates">
+                     <v-list-item-group  v-model="roomDtos[x]">
+                       <template v-for="(item, i) in room.policy">
+                         <v-divider
+                             v-if="!item"
+                             :key="`divider-${i}`"
+                         ></v-divider>
+                         <v-list-item
+                             v-else
+                             :key="`item-${i}`"
+                             :value="setDto(room, room.policy[i])"
+                             active-class="deep-purple--text text--accent-4">
+                           <template v-slot:default="{ active }">
+                             <v-list-item-content>
+
+                               <v-row>
+                                 <v-col>
+                                   2 adults 1 child
+                                 </v-col>
+                                 <v-col>
+                                   {{roomPrice(room.dates.pricePerNightForAdult, room.dates.pricePerNightForChild, room.policy[i].priceCoefficient)}}
+                                 </v-col>
+                               </v-row>
+                             </v-list-item-content>
+                             <v-list-item-action>
+                               <v-checkbox
+                                   :input-value="active"
+                                   color="deep-purple accent-4"
+                               ></v-checkbox>
+                             </v-list-item-action>
+                           </template>
+                         </v-list-item>
                        </template>
-                     </v-list-item>
-                   </template>
-                 </v-list-item-group>
-                </v-list>
+                     </v-list-item-group>
+                   </v-list>
+                 </v-col>
+               </v-row>
             </v-card-text>
           </div>
         </v-card>
@@ -267,6 +285,7 @@
 import SearchComponent from "@/components/SearchComponent";
 import {Reservation, ReservationDto} from '@/types/Reservation';
 import currency from 'currency.js'
+import helpers from "@/services/helpers";
 
 export default {
   name: 'App',
@@ -281,13 +300,15 @@ export default {
     request: {},
     days: null,
     reviews: null,
-    pId: null
+    pId: null,
+    dialog: false
   }),
   beforeMount () {
     this.getProperty()
     this.GetReviews()
   },
   methods: {
+    ...helpers,
     async getProperty () {
       this.pId = this.$route.params.id
       return await this.$api.property.byId(this.pId).then((r) => { this.property = r.data })
