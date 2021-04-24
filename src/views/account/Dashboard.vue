@@ -31,7 +31,7 @@ export default {
     }
   },
   beforeMount () {
-    this.getUserReservations()
+    // this.getUserReservations()
   },
   methods: {
     async getUserReservations () {

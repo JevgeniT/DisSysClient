@@ -18,20 +18,21 @@ export default {
   name: 'Identity',
   methods: {
     logoutOnClick () {
-      store.dispatch('clearJwt')
+      localStorage.clear()
       router.push('/').catch(e => {})
     }
   },
   computed: {
     userEmail () {
-      if (store.state.jwt) {
-        const decoded = JwtDecode(store.state.jwt)
+      if (localStorage.getItem('jwt')) {
+        const decoded = JwtDecode(localStorage.getItem('jwt'))
         return decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
       }
       return 'null'
     },
     isAuthenticated () {
-      return store.getters.isAuthenticated
+      console.log(localStorage.getItem('jwt') !== null)
+      return localStorage.getItem('jwt') !== null;
     },
     isHost () {
       if (store.state.jwt) {

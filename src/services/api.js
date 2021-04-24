@@ -10,9 +10,10 @@ const conf = {
     'Content-Type': 'application/json'
   }
 }
+
 api.interceptors.request.use(
   (config) => {
-    const token = store.state.jwt
+    const token = localStorage.getItem('jwt')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`
     }
