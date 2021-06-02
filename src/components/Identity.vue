@@ -5,8 +5,8 @@
     <v-btn @click="logoutOnClick" text color="primary">Logout</v-btn>
   </div>
   <div v-else>
-         <v-btn class="ma-2" text  color="primary"  ><router-link to="/account/login">Login</router-link></v-btn>
-         <v-btn class="ma-2" text  color="primary" ><router-link to="/account/register">Signup</router-link></v-btn>
+    <v-btn class="ma-2" text  color="primary"  ><router-link to="/account/login">Login</router-link></v-btn>
+    <v-btn class="ma-2" text  color="primary" ><router-link to="/account/register">Signup</router-link></v-btn>
   </div>
 </template>
 <script>
@@ -27,7 +27,7 @@ export default {
       if (localStorage.getItem('jwt')) {
         const decoded = JwtDecode(localStorage.getItem('jwt'))
         return decoded['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name']
-      }
+       }
       return 'null'
     },
     isAuthenticated () {

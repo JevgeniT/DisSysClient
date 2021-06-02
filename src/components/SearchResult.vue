@@ -16,19 +16,19 @@
                     <v-card-title>
                         Filter by:
                     </v-card-title>
-                    <v-divider></v-divider>
-                    <v-card-text>
-                        <v-checkbox v-model="selected" value="Hotel" class="mx-2" label="Hotel"></v-checkbox>
-                        <v-checkbox v-model="selected" value="Apartments" class="mx-2" label="Apartments"></v-checkbox>
-                        <v-checkbox v-model="selected" :value="response.score" class="mx-2" label="6+"></v-checkbox>
-                        <v-checkbox v-model="selected" value="7" class="mx-2" label="7+"></v-checkbox>
+                    <v-divider class="m-0"></v-divider>
+                    <v-card-text >
+                        <v-checkbox v-model="selected" value="Hotel" class="mx-1 mt-0" label="Hotel"></v-checkbox>
+                        <v-checkbox v-model="selected" value="Apartments" class="mx-1 mt-0" label="Apartments"></v-checkbox>
+                        <v-checkbox v-model="selected" :value="response.score" class="mx-1 mt-0" label="6+"></v-checkbox>
+                        <v-checkbox v-model="selected" value="7" class="mx-1 mt-0" label="7+"></v-checkbox>
                     </v-card-text>
                 </v-card>
            </v-col>
            <v-col md="12" v-if="response.notFound">
            <v-card>
                <v-list-item-content style="text-align: center">
-                   <p>Sorry, nothing has been found</p>
+                   <p class="pt-1">Sorry, nothing has been found</p>
                </v-list-item-content>
            </v-card>
            </v-col>
@@ -41,7 +41,10 @@
                    <v-row dense class="card-row">
                     <v-list-item-content>
                        <v-list-item-title class="headline mb-2">
-                         <v-chip color="green" outlined small>{{d.type}}</v-chip><h4 style="display: inline; padding-left: 4px"><router-link :to="{name:'propertyInfo', params:{id: d.id}}">{{d.name}}</router-link></h4>
+                         <v-chip color="green" outlined small>{{d.type}}</v-chip>
+                         <h4 style="display: inline; padding-left: 4px">
+                           <router-link :to="{name:'propertyInfo', params:{id: d.id}}">{{d.name}}</router-link>
+                         </h4>
                        </v-list-item-title>
                        <v-list-item-subtitle><v-icon>mdi-map-marker</v-icon> {{d.country}}, {{d.address}}</v-list-item-subtitle>
                          <v-col justify="start" v-if="d.room">
